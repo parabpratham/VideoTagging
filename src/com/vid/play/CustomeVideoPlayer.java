@@ -43,6 +43,7 @@ import javax.swing.Timer;
 import com.sun.accessibility.internal.resources.accessibility;
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
+import com.vid.test.MenuBar;
 
 import uk.co.caprica.vlcj.binding.internal.libvlc_marquee_position_e;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
