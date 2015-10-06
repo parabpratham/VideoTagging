@@ -1,4 +1,4 @@
-package com.vid.play;
+package com.vid.test;
 
 public class MarqueeTest {
 
