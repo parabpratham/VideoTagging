@@ -15,9 +15,8 @@ import javax.swing.SwingUtilities;
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 
-import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class OverLayGenerator {
@@ -34,6 +33,9 @@ public class OverLayGenerator {
 
 	private ThreadGroup tg;
 
+	public final static Object obj = new Object();
+	public final static Object og = new Object();
+
 	public OverLayGenerator(EmbeddedMediaPlayer mediaPlayer) {
 
 		this.mediaPlayer = mediaPlayer;
@@ -49,10 +51,6 @@ public class OverLayGenerator {
 		new Thread(tg, new GenerateOverlays(), "Generate Overlay").start();
 		new Thread(tg, new DisplayOverlays(mediaPlayer), "Diaplaying Overlay").start();
 		System.out.println(tg.activeCount() + " threads in thread group.");
-
-		registerListeners();
-		
-		
 	}
 
 	@SuppressWarnings("deprecation")
@@ -67,6 +65,10 @@ public class OverLayGenerator {
 
 	}
 
+	private long getCurrentTime() {
+		return mediaPlayer.getTime();
+	}
+
 	private final class DisplayOverlays implements Runnable {
 		private final EmbeddedMediaPlayer mediaPlayer;
 
@@ -76,23 +78,31 @@ public class OverLayGenerator {
 
 		@Override
 		public void run() {
-			int fps = -1;
+			int fps = 267;
+
+			try {
+				synchronized (obj) {
+					obj.wait();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
 			currentTime = mediaPlayer.getTime();
 			totalTime = mediaPlayer.getLength();
 
 			System.out.println(Thread.currentThread().getName() + " Started " + currentTime + " " + totalTime);
-			List<Integer> keySet = new ArrayList<Integer>();
-			keySet.addAll(overlays.keySet());
 
 			while (currentTime < totalTime) {
+				List<Integer> keySet = new ArrayList<Integer>();
+				keySet.addAll(overlays.keySet());
 				java.util.Collections.sort(keySet);
 				for (int startTime : keySet) {
 					while (startTime > currentTime) {
 						try {
-							System.out.println("Overlay start " + startTime + " " + currentTime + " Sleeping");
-							Thread.sleep(267);
-							currentTime += 267;
+							System.out.println("Disaply Overlay " + startTime + " " + currentTime + " Sleeping");
+							Thread.sleep((fps));
+							currentTime = currentTime + fps;
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -116,31 +126,9 @@ public class OverLayGenerator {
 				mediaPlayer.enableOverlay(false);
 
 			}
+			System.out.println(Thread.currentThread().getName() + " Ended ");
 		}
-
 	}
-	
-	private void registerListeners() {
-		mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
-			@Override
-			public void playing(MediaPlayer mediaPlayer) {
-				// updateVolume(mediaPlayer.getVolume());
-			}
-			
-			@Override
-			public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
-				super.timeChanged(mediaPlayer, newTime);
-				
-			}
-
-			@Override
-			public void videoOutput(MediaPlayer mediaPlayer, int newCount) {
-				super.videoOutput(mediaPlayer, newCount);
-			}
-
-		});
-	}
-	
 
 	private final class GenerateOverlays implements Runnable {
 
@@ -154,6 +142,13 @@ public class OverLayGenerator {
 			// Updates to user interface components must be executed on the
 			// Event
 			// Dispatch Thread
+			try {
+				synchronized (obj) {
+					obj.wait();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
 			while (j < 2) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -176,11 +171,23 @@ public class OverLayGenerator {
 				});
 				j++;
 			}
+
+			synchronized (og) {
+				try {
+					og.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+
 	}
 
 	public void updateCurrentTime(long currentTime) {
 		this.currentTime = currentTime;
+		synchronized (og) {
+			og.notify();
+		}
 	}
 
 	private Window draw() {
@@ -259,6 +266,12 @@ public class OverLayGenerator {
 														// do in
 		}
 		return test;
+	}
+
+	public static void NotifyObj() {
+		synchronized (obj) {
+			obj.notifyAll();
+		}
 	}
 
 	private class CustomeOverlays {

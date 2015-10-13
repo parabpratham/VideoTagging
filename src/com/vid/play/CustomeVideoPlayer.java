@@ -5,14 +5,9 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -33,24 +29,14 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 
-import com.sun.accessibility.internal.resources.accessibility;
-import com.sun.awt.AWTUtilities;
-import com.sun.jna.platform.WindowUtils;
-import com.vid.test.MenuBar;
-
-import uk.co.caprica.vlcj.binding.internal.libvlc_marquee_position_e;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
-import uk.co.caprica.vlcj.component.AudioMediaPlayerComponent;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-import uk.co.caprica.vlcj.filter.MediaFileFilter;
 import uk.co.caprica.vlcj.player.MediaDetails;
 import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -73,14 +59,14 @@ public class CustomeVideoPlayer {
 	}
 
 	private PlayerControlsPanel controlsPanel;
-	private MenuBar menu;
 	private EmbeddedMediaPlayerComponent videoMediaPlayerComponent;
-	private AudioMediaPlayerComponent audioMediaPlayerComponent;
 	private FullScreenStatergy fullScreenStrategy;
 	private Canvas videoSurface;
 	private MediaPlayerFactory mediaPlayerFactory;
 	private EmbeddedMediaPlayer mediaPlayer;
 	private com.vid.play.PlayerVideoAdjustPanel videoAdjustPanel;
+	private VideoInformationDisplayPanel videoInformationDisplayPanel;
+	private OverLayGenerator overLayGenerator;
 
 	public static void main(String[] args) {
 		new NativeDiscovery().discover();
@@ -95,12 +81,9 @@ public class CustomeVideoPlayer {
 	// Constructor for the video
 	public CustomeVideoPlayer() {
 
-		// init
-		fileChooser = new JFileChooser();
-
 		videoSurface = new Canvas();
 		videoSurface.setBackground(Color.black);
-		videoSurface.setSize(800, 600); // Only for initial layout
+		videoSurface.setSize(width, height); // Only for initial layout
 
 		mainFrame = new JFrame("VLCJ Test Player");
 		mainFrame.setIconImage(new ImageIcon(getClass().getResource("/icons/vlcj-logo.png")).getImage());
@@ -128,14 +111,18 @@ public class CustomeVideoPlayer {
 
 		// logger.debug("vlcArgs={}", vlcArgs);
 
+		// TODO init
+		fileChooser = new JFileChooser();
+
 		mediaPlayerFactory = new MediaPlayerFactory(vlcArgs.toArray(new String[vlcArgs.size()]));
 		mediaPlayerFactory.setUserAgent("vlcj test player");
 
 		// Set full screen statergy
-
 		mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer();
-		controlsPanel = new PlayerControlsPanel(mediaPlayer);
+		overLayGenerator = new OverLayGenerator(mediaPlayer);
+		controlsPanel = new PlayerControlsPanel(mediaPlayer, overLayGenerator);
 		videoAdjustPanel = new PlayerVideoAdjustPanel(mediaPlayer);
+		videoInformationDisplayPanel = new VideoInformationDisplayPanel(mediaPlayer);
 
 		fullScreenStrategy = new FullScreenStatergy(mediaPlayer, controlsPanel, mainFrame);
 		mediaPlayer.setFullScreenStrategy(fullScreenStrategy);
@@ -158,7 +145,15 @@ public class CustomeVideoPlayer {
 		mainFrame.setBackground(Color.black);
 		mainFrame.add(videoSurface, BorderLayout.CENTER);
 		mainFrame.add(controlsPanel, BorderLayout.SOUTH);
-		mainFrame.add(videoAdjustPanel, BorderLayout.EAST);
+
+		// mainFrame.add(videoAdjustPanel, BorderLayout.EAST);
+		// mainFrame.add(videoInformationDisplayPanel, BorderLayout.EAST);
+
+		JTabbedPane infoPane = new JTabbedPane();
+		infoPane.add("Media Information", videoInformationDisplayPanel);
+		infoPane.add("Video Adjust", videoAdjustPanel);
+		mainFrame.add(infoPane, BorderLayout.EAST);
+
 		mainFrame.setJMenuBar(buildMenuBar());
 		mainFrame.pack();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -230,53 +225,16 @@ public class CustomeVideoPlayer {
 
 		mediaPlayer.addMediaPlayerEventListener(new TestPlayerMediaPlayerEventListener());
 
-		boolean transparentWindowsSupport = true;
-		try {
-			Class.forName("com.sun.awt.AWTUtilities");
-		} catch (Exception e) {
-			transparentWindowsSupport = false;
-		}
-
-		// logger.debug("transparentWindowsSupport={}",
-		// transparentWindowsSupport);
-
-		if (transparentWindowsSupport) {
-			final Window test = new Window(null, WindowUtils.getAlphaCompatibleGraphicsConfiguration()) {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void paint(Graphics g) {
-					Graphics2D g2 = (Graphics2D) g;
-
-					g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-					g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-							RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-
-					g.setColor(Color.white);
-					g.fillRoundRect(100, 150, 100, 100, 32, 32);
-
-					g.setFont(new Font("Sans", Font.BOLD, 32));
-					g.drawString("Heavyweight overlay test", 100, 300);
-				}
-			};
-
-			AWTUtilities.setWindowOpaque(test, false); // Doesn't work in
-														// full-screen exclusive
-														// mode, you would have
-														// to use 'simulated'
-														// full-screen -
-														// requires Sun/Oracle
-														// JDK
-			test.setBackground(new Color(0, 0, 0, 0)); // This is what you do in
-														// JDK7
-
-			// mediaPlayer.setOverlay(test);
-			// mediaPlayer.enableOverlay(true);
-		}
-
 		// This might be useful
 		// enableMousePointer(false);
 
+		// For developing
+		playMedia(VIDEO_ADD);
+
+	}
+
+	public void playMedia(String mediaAdd) {
+		mediaPlayer.playMedia(mediaAdd);
 	}
 
 	private void parseInformation() {
@@ -306,73 +264,6 @@ public class CustomeVideoPlayer {
 		int chapterCount = mediaPlayer.getChapterCount();
 		int currentChapter = mediaPlayer.getChapter();
 		System.out.println("ChapterCount " + chapterCount + " " + currentChapter);
-
-	}
-
-	private String getFileName() {
-		String[] add = VIDEO_ADD.split("/");
-		return add[add.length - 1];
-	}
-
-	private void setVideoMediaPlayer(JFrame frame) {
-
-		videoMediaPlayerComponent = new EmbeddedMediaPlayerComponent() {
-			private static final long serialVersionUID = 7286396827742362356L;
-
-			@Override
-			public void playing(MediaPlayer mediaPlayer) {
-				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
-						@Override
-						public void run() {
-							String title;
-							if (videoMediaPlayerComponent.getMediaPlayer().getTitle() == 0) {
-								title = getFileName();
-							} else {
-								title = videoMediaPlayerComponent.getMediaPlayer().getTitleDescriptions().get(0)
-										.description();
-							}
-							frame.setTitle((String.format("My first Media Player -%s", title)));
-						}
-					});
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-			@Override
-			public void finished(MediaPlayer mediaPlayer) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						closeWindow();
-					}
-				});
-			}
-
-			@Override
-			public void error(MediaPlayer mediaPlayer) {
-				// TODO Auto-generated method stub
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						JOptionPane.showMessageDialog(frame, "Failed to play media", "Erro", JOptionPane.ERROR_MESSAGE);
-						closeWindow();
-					};
-				});
-			}
-
-		};
-
-		// On Windows you must explicitly disable the native mouse and keyboard
-		// input handling.
-		if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-			videoMediaPlayerComponent.getMediaPlayer().setEnableKeyInputHandling(false);
-			videoMediaPlayerComponent.getMediaPlayer().setEnableMouseInputHandling(false);
-		}
-
-		// Mouse and keyboard
-		setMouseAndKeyboard();
 
 	}
 
@@ -494,7 +385,6 @@ public class CustomeVideoPlayer {
 		return menuBar;
 	}
 
-
 	private void closeWindow() {
 		mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
 	}
@@ -538,9 +428,17 @@ public class CustomeVideoPlayer {
 
 			MediaDetails mediaDetails = mediaPlayer.getMediaDetails();
 			// logger.info("mediaDetails={}", mediaDetails);
-
 			MediaMeta mediaMeta = mediaPlayer.getMediaMeta();
 			// logger.info("mediaMeta={}", mediaMeta);
+			mainFrame.setTitle(mediaMeta.getTitle());
+
+			System.out.println("--------------------------------------");
+			System.out.println("Starting " + mediaMeta.getTitle());
+			System.out.println(mediaDetails);
+			System.out.println("--------------------------------------");
+			OverLayGenerator.NotifyObj();
+			System.out.println("Notify overlay");
+			System.out.println("--------------------------------------");
 
 			final Dimension dimension = mediaPlayer.getVideoDimension();
 			// logger.debug("dimension={}", dimension);
@@ -564,13 +462,15 @@ public class CustomeVideoPlayer {
 			}
 
 			// Demo the marquee
-			mediaPlayer.setMarqueeText("vlcj java bindings for vlc");
-			mediaPlayer.setMarqueeSize(40);
-			mediaPlayer.setMarqueeOpacity(95);
-			mediaPlayer.setMarqueeColour(Color.white);
-			mediaPlayer.setMarqueeTimeout(5000);
-			mediaPlayer.setMarqueeLocation(50, 120);
-			mediaPlayer.enableMarquee(true);
+			/*
+			 * mediaPlayer.setMarqueeText("vlcj java bindings for vlc");
+			 * mediaPlayer.setMarqueeSize(40);
+			 * mediaPlayer.setMarqueeOpacity(95);
+			 * mediaPlayer.setMarqueeColour(Color.white);
+			 * mediaPlayer.setMarqueeTimeout(5000);
+			 * mediaPlayer.setMarqueeLocation(50, 120);
+			 * mediaPlayer.enableMarquee(true);
+			 */
 
 			// Not quite sure how crop geometry is supposed to work...
 			//

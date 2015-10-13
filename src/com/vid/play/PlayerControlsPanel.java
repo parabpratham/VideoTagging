@@ -20,6 +20,7 @@
 package com.vid.play;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -45,7 +46,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import uk.co.caprica.vlcj.binding.LibVlcConst;
+import uk.co.caprica.vlcj.binding.internal.libvlc_marquee_position_e;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
+import uk.co.caprica.vlcj.player.Marquee;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -64,12 +67,11 @@ public class PlayerControlsPanel extends JPanel {
 	// private JProgressBar positionProgressBar;
 	private JSlider positionSlider;
 	private JLabel chapterLabel;
-
+	private JLabel totallengthLabel;
 	private JButton previousChapterButton;
 	private JButton rewindButton;
 	private JButton stopButton;
-	private JButton pauseButton;
-	private JButton playButton;
+	private JButton playPauseButton;
 	private JButton fastForwardButton;
 	private JButton nextChapterButton;
 
@@ -89,9 +91,11 @@ public class PlayerControlsPanel extends JPanel {
 
 	private boolean mousePressedPlaying = false;
 
-	public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer) {
-		this.mediaPlayer = mediaPlayer;
+	private OverLayGenerator generator;
 
+	public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, OverLayGenerator generator) {
+		this.mediaPlayer = mediaPlayer;
+		this.generator = generator;
 		createUI();
 
 		executorService.scheduleAtFixedRate(new UpdateRunnable(mediaPlayer), 0L, 1L, TimeUnit.SECONDS);
@@ -116,9 +120,12 @@ public class PlayerControlsPanel extends JPanel {
 		positionSlider.setMinimum(0);
 		positionSlider.setMaximum(1000);
 		positionSlider.setValue(0);
+		positionSlider.setSize(new Dimension(1000, 10));
+		positionSlider.setOrientation(SwingUtilities.HORIZONTAL);
 		positionSlider.setToolTipText("Position");
 
 		chapterLabel = new JLabel("00/00");
+		totallengthLabel = new JLabel("hh:mm:ss");
 
 		previousChapterButton = new JButton();
 		previousChapterButton
@@ -133,13 +140,9 @@ public class PlayerControlsPanel extends JPanel {
 		stopButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_stop_blue.png")));
 		stopButton.setToolTipText("Stop");
 
-		pauseButton = new JButton();
-		pauseButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_pause_blue.png")));
-		pauseButton.setToolTipText("Play/pause");
-
-		playButton = new JButton();
-		playButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_play_blue.png")));
-		playButton.setToolTipText("Play");
+		playPauseButton = new JButton();
+		playPauseButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_pause_blue.png")));
+		playPauseButton.setToolTipText("Play/pause");
 
 		fastForwardButton = new JButton();
 		fastForwardButton
@@ -206,7 +209,8 @@ public class PlayerControlsPanel extends JPanel {
 
 		topPanel.add(timeLabel, BorderLayout.WEST);
 		topPanel.add(positionPanel, BorderLayout.CENTER);
-		topPanel.add(chapterLabel, BorderLayout.EAST);
+		// topPanel.add(chapterLabel, BorderLayout.EAST);
+		topPanel.add(totallengthLabel, BorderLayout.EAST);
 
 		add(topPanel, BorderLayout.NORTH);
 
@@ -217,8 +221,7 @@ public class PlayerControlsPanel extends JPanel {
 		bottomPanel.add(previousChapterButton);
 		bottomPanel.add(rewindButton);
 		bottomPanel.add(stopButton);
-		bottomPanel.add(pauseButton);
-		bottomPanel.add(playButton);
+		bottomPanel.add(playPauseButton);
 		bottomPanel.add(fastForwardButton);
 		bottomPanel.add(nextChapterButton);
 
@@ -244,12 +247,23 @@ public class PlayerControlsPanel extends JPanel {
 		if (!mediaPlayer.isSeekable()) {
 			return;
 		}
-		float positionValue = positionSlider.getValue() / 1000.0f;
-		// Avoid end of file freeze-up
-		if (positionValue > 0.99f) {
-			positionValue = 0.99f;
+
+		int value = positionSlider.getValue();
+
+		if (positionSlider.getOrientation() == JSlider.HORIZONTAL) {
+			value = positionSlider.getMousePosition().x;
+		} else if (positionSlider.getOrientation() == JSlider.VERTICAL) {
+			value = positionSlider.getMousePosition().y;
 		}
-		mediaPlayer.setPosition(positionValue);
+		int positionValue = (int) (value * mediaPlayer.getLength() / positionSlider.getWidth());
+		//System.out
+			//	.println(value + " " + positionValue + " " + mediaPlayer.getLength() + " " + positionSlider.getWidth());
+		// Avoid end of file freeze-up
+		/*
+		 * if (positionValue > 0.99f) { positionValue = 0.99f; }
+		 */
+		mediaPlayer.setTime(positionValue);
+		generator.updateCurrentTime(positionValue);
 	}
 
 	private void updateUIState() {
@@ -268,7 +282,7 @@ public class PlayerControlsPanel extends JPanel {
 			}
 		}
 		long time = mediaPlayer.getTime();
-		int position = (int) (mediaPlayer.getPosition() * 1000.0f);
+		int position = (int) (mediaPlayer.getPosition() * positionSlider.getValue() * 1000.0f);
 		int chapter = mediaPlayer.getChapter();
 		int chapterCount = mediaPlayer.getChapterCount();
 		updateTime(time);
@@ -284,31 +298,105 @@ public class PlayerControlsPanel extends JPanel {
 		}
 	}
 
+	public void playPauseVideo() {
+
+		if (mediaPlayer.isPlaying()) {
+
+			Marquee marquee = Marquee.marquee().text("Pause").size(40).colour(Color.WHITE).timeout(3000)
+					.position(libvlc_marquee_position_e.bottom).opacity(0.8f).enable();
+			mediaPlayer.setMarquee(marquee);
+
+			playPauseButton
+					.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_play_blue.png")));
+			playPauseButton.setToolTipText("Play/pause");
+			isPlaying = false;
+
+			// Remove overlay
+			mediaPlayer.enableOverlay(false);
+
+			mediaPlayer.pause();
+		} else {
+
+			Marquee marquee1 = Marquee.marquee().text("Play").size(40).colour(Color.WHITE).timeout(3000)
+					.position(libvlc_marquee_position_e.bottom).opacity(0.8f).enable();
+			mediaPlayer.setMarquee(marquee1);
+
+			playPauseButton
+					.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_pause_blue.png")));
+			playPauseButton.setToolTipText("Play/pause");
+			isPlaying = true;
+
+			if (generator == null)
+				generator = new OverLayGenerator(mediaPlayer);
+
+			// Set overlay
+			mediaPlayer.enableOverlay(true);
+
+			if (isPlaying)
+				mediaPlayer.play();
+		}
+
+	}
+
+	private boolean isPlaying = false;
+
 	private void registerListeners() {
 		mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
 			@Override
 			public void playing(MediaPlayer mediaPlayer) {
 				// updateVolume(mediaPlayer.getVolume());
 			}
+
+			@Override
+			public void videoOutput(MediaPlayer mediaPlayer, int newCount) {
+				setTotallengthLabel(Helper.setTotalTime(mediaPlayer.getLength()));
+				super.videoOutput(mediaPlayer, newCount);
+			}
+
 		});
 
 		positionSlider.addMouseListener(new MouseAdapter() {
+
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {
 				if (mediaPlayer.isPlaying()) {
 					mousePressedPlaying = true;
 					mediaPlayer.pause();
-				} else {
-					mousePressedPlaying = false;
 				}
 				setSliderBasedPosition();
+				updateUIState();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				setSliderBasedPosition();
-				updateUIState();
 			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				int value = positionSlider.getValue();
+
+				if (positionSlider.getOrientation() == JSlider.HORIZONTAL) {
+					value = positionSlider.getMousePosition().x;
+				} else if (positionSlider.getOrientation() == JSlider.VERTICAL) {
+					value = positionSlider.getMousePosition().y;
+				}
+				if (positionSlider.getMousePosition() != null) {
+					int millis = (int) (value * mediaPlayer.getLength() / positionSlider.getWidth());
+					String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+							TimeUnit.MILLISECONDS.toMinutes(millis)
+									- TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+							TimeUnit.MILLISECONDS.toSeconds(millis)
+									- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+					//System.out.println(s + " " + positionSlider.getMousePosition());
+					positionSlider.setToolTipText(s);
+				}
+			}
+
 		});
 
 		previousChapterButton.addActionListener(new ActionListener() {
@@ -328,21 +416,18 @@ public class PlayerControlsPanel extends JPanel {
 		stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				generator.stopVideoOerlays();
+				playPauseButton
+						.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_play_blue.png")));
 				mediaPlayer.stop();
+				generator = null;
 			}
 		});
 
-		pauseButton.addActionListener(new ActionListener() {
+		playPauseButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mediaPlayer.pause();
-			}
-		});
-
-		playButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mediaPlayer.play();
+				playPauseVideo();
 			}
 		});
 
@@ -388,10 +473,14 @@ public class PlayerControlsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mediaPlayer.enableOverlay(false);
+				generator.stopVideoOerlays();
 				if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
 					mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
 				}
+
+				generator = new OverLayGenerator(mediaPlayer);
 				mediaPlayer.enableOverlay(true);
+
 			}
 		});
 
@@ -453,6 +542,7 @@ public class PlayerControlsPanel extends JPanel {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
+
 					if (mediaPlayer.isPlaying()) {
 						updateTime(time);
 						updatePosition(position);
@@ -487,4 +577,37 @@ public class PlayerControlsPanel extends JPanel {
 	private void updateVolume(int value) {
 		volumeSlider.setValue(value);
 	}
+
+	public JLabel getTimeLabel() {
+		return timeLabel;
+	}
+
+	public void setTimeLabel(JLabel timeLabel) {
+		this.timeLabel = timeLabel;
+	}
+
+	public String getTotallengthLabel() {
+		return totallengthLabel.getText();
+	}
+
+	public void setTotallengthLabel(String s) {
+		this.totallengthLabel.setText(s);
+	}
+
+	public int getVolumeSlider() {
+		return volumeSlider.getValue();
+	}
+
+	public void setVolumeSlider(int value) {
+		this.volumeSlider.setValue(value);
+	}
+
+	public JFileChooser getFileChooser() {
+		return fileChooser;
+	}
+
+	public void setFileChooser(JFileChooser fileChooser) {
+		this.fileChooser = fileChooser;
+	}
+
 }
