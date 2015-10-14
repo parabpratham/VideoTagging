@@ -68,16 +68,6 @@ public class CustomeVideoPlayer {
 	private VideoInformationDisplayPanel videoInformationDisplayPanel;
 	private OverLayGenerator overLayGenerator;
 
-	public static void main(String[] args) {
-		new NativeDiscovery().discover();
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new CustomeVideoPlayer();
-			}
-		});
-	}
-
 	// Constructor for the video
 	public CustomeVideoPlayer() {
 
