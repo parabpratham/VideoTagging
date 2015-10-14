@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+		<Console name="Console">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<File name="TraceFile" fileName="logs/trace.log">
+			<PatternLayout
+				pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</File>
+		<File name="ErrorFile" fileName="logs/error.log">
+			<PatternLayout
+				pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</File>
+		<File name="OverlayFile" fileName="logs/Overlay.log">
+			<PatternLayout
+				pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</File>
+	</Appenders>
+	<Loggers>
+		<Root level="TRACE">
+			<appender-ref ref="TraceFile" level="TRACE" />
+		</Root>
+		<logger name="com.vid.log.com" level="TRACE" additivity="false">
+			<AppenderRef ref="Console" />
+			<appender-ref ref="TraceFile" level="TRACE" />
+		</logger>
+		<logger name="com.vid.log.error" level="ERROR" additivity="false">
+			<AppenderRef ref="Console" />
+			<appender-ref ref="ErrorFile" level="ERROR" />
+		</logger>
+		<logger name="com.org.log.overlay" level="TRACE" additivity="false">
+			<AppenderRef ref="Console" />
+			<appender-ref ref="OverlayFile" level="TRACE" />
+		</logger>
+	</Loggers>
+</Configuration>
