@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.vid.log.error.ErrorLog;
-import com.vid.log.overlay.OverlayLog;
 import com.vid.log.trace.TraceLog;
+import com.vid.log.trace.overlay.OverlayLog;
 
 public class AppLogger {
 
