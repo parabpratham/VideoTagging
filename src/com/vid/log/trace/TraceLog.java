@@ -9,7 +9,8 @@ public class TraceLog {
 
 	public TraceLog() {
 		logger = LogManager.getLogger(TraceLog.class);
-		logger.error("TraceLog :: Trace Messages ::");
+		logger.error("TraceLog :: Trace Messages ::-----------------------------------");
+		logger.trace("---------------------------New Run------------------------------");
 	}
 
 	public void trace(String msg) {

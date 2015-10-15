@@ -9,7 +9,8 @@ public class ErrorLog {
 
 	public ErrorLog() {
 		logger = LogManager.getLogger(ErrorLog.class);
-		logger.error("ErrorLog :: ERROR Messages ::");
+		logger.error("ErrorLog :: ERROR Messages ::-----------------------------------");
+		logger.trace("---------------------------New Run------------------------------");
 	}
 	
 	public void error(String msg) {
