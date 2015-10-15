@@ -256,14 +256,14 @@ public class PlayerControlsPanel extends JPanel {
 			value = positionSlider.getMousePosition().y;
 		}
 		int positionValue = (int) (value * mediaPlayer.getLength() / positionSlider.getWidth());
-		//System.out
-			//	.println(value + " " + positionValue + " " + mediaPlayer.getLength() + " " + positionSlider.getWidth());
+		// System.out
+		// .println(value + " " + positionValue + " " + mediaPlayer.getLength()
+		// + " " + positionSlider.getWidth());
 		// Avoid end of file freeze-up
 		/*
 		 * if (positionValue > 0.99f) { positionValue = 0.99f; }
 		 */
 		mediaPlayer.setTime(positionValue);
-		generator.updateCurrentTime(positionValue);
 	}
 
 	private void updateUIState() {
@@ -286,7 +286,6 @@ public class PlayerControlsPanel extends JPanel {
 		int chapter = mediaPlayer.getChapter();
 		int chapterCount = mediaPlayer.getChapterCount();
 		updateTime(time);
-		updatePosition(position);
 		updateChapter(chapter, chapterCount);
 	}
 
@@ -365,35 +364,53 @@ public class PlayerControlsPanel extends JPanel {
 				}
 				setSliderBasedPosition();
 				updateUIState();
+				updateOverlay();
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-
+				if (mediaPlayer.isPlaying()) {
+					mousePressedPlaying = true;
+					mediaPlayer.pause();
+				}
+				setSliderBasedPosition();
+				updateUIState();
+				updateOverlay();
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				if (mediaPlayer.isPlaying()) {
+					mousePressedPlaying = true;
+					mediaPlayer.pause();
+				}
+				setSliderBasedPosition();
+				updateUIState();
+				updateOverlay();
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
+				
 				int value = positionSlider.getValue();
 
-				if (positionSlider.getOrientation() == JSlider.HORIZONTAL) {
-					value = positionSlider.getMousePosition().x;
-				} else if (positionSlider.getOrientation() == JSlider.VERTICAL) {
-					value = positionSlider.getMousePosition().y;
-				}
 				if (positionSlider.getMousePosition() != null) {
-					int millis = (int) (value * mediaPlayer.getLength() / positionSlider.getWidth());
-					String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-							TimeUnit.MILLISECONDS.toMinutes(millis)
-									- TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-							TimeUnit.MILLISECONDS.toSeconds(millis)
-									- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-					//System.out.println(s + " " + positionSlider.getMousePosition());
-					positionSlider.setToolTipText(s);
+					if (positionSlider.getOrientation() == JSlider.HORIZONTAL) {
+						value = positionSlider.getMousePosition().x;
+					} else if (positionSlider.getOrientation() == JSlider.VERTICAL) {
+						value = positionSlider.getMousePosition().y;
+					}
+					if (positionSlider.getMousePosition() != null) {
+						int millis = (int) (value * mediaPlayer.getLength() / positionSlider.getWidth());
+						String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+								TimeUnit.MILLISECONDS.toMinutes(millis)
+										- TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+								TimeUnit.MILLISECONDS.toSeconds(millis)
+										- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+						// System.out.println(s + " " +
+						// positionSlider.getMousePosition());
+						positionSlider.setToolTipText(s);
+					}
 				}
 			}
 
@@ -560,6 +577,11 @@ public class PlayerControlsPanel extends JPanel {
 				TimeUnit.MILLISECONDS.toSeconds(millis)
 						- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 		timeLabel.setText(s);
+	}
+
+	private void updateOverlay() {
+		// positionProgressBar.setValue(value);
+		generator.updateCurrentTime();
 	}
 
 	private void updatePosition(int value) {
