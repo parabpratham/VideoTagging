@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
+    <properties>
+        <property name="name">overlay</property>
+    </properties>
 	<Appenders>
+		<RollingFile name="OverlayFile" fileName="logs/overlay.log"
+			filePattern="logs/$${date:yyyy-MM-dd}/${name}-%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout
+				pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy /><!-- Rotated everyday -->
+				<SizeBasedTriggeringPolicy size="10 MB" /> <!-- Or every 100 MB -->
+			</Policies>
+		</RollingFile>
+
 		<Console name="Console">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
@@ -9,10 +22,6 @@
 				pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</File>
 		<File name="ErrorFile" fileName="logs/error.log">
-			<PatternLayout
-				pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-		</File>
-		<File name="OverlayFile" fileName="logs/Overlay.log">
 			<PatternLayout
 				pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</File>
@@ -29,7 +38,8 @@
 			<AppenderRef ref="Console" />
 			<appender-ref ref="ErrorFile" level="ERROR" />
 		</logger>
-		<logger name="com.vid.log.trace.overlay" level="TRACE" additivity="false">
+		<logger name="com.vid.log.trace.overlay" level="TRACE"
+			additivity="false">
 			<appender-ref ref="OverlayFile" level="TRACE" />
 		</logger>
 	</Loggers>
