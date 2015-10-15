@@ -29,9 +29,10 @@
 			<AppenderRef ref="Console" />
 			<appender-ref ref="ErrorFile" level="ERROR" />
 		</logger>
-		<logger name="com.org.log.overlay" level="TRACE" additivity="false">
+		<logger name="com.org.log.overlay" level="TRACE" additivity="TRUE">
 			<AppenderRef ref="Console" />
 			<appender-ref ref="OverlayFile" level="TRACE" />
 		</logger>
 	</Loggers>
 </Configuration>
+<!-- http://logging.apache.org/log4j/2.x/faq.html#config_location -->
