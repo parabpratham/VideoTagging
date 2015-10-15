@@ -250,20 +250,23 @@ public class PlayerControlsPanel extends JPanel {
 
 		int value = positionSlider.getValue();
 
-		if (positionSlider.getOrientation() == JSlider.HORIZONTAL) {
-			value = positionSlider.getMousePosition().x;
-		} else if (positionSlider.getOrientation() == JSlider.VERTICAL) {
-			value = positionSlider.getMousePosition().y;
+		if (positionSlider.getMousePosition() != null) {
+			if (positionSlider.getOrientation() == JSlider.HORIZONTAL) {
+				value = positionSlider.getMousePosition().x;
+			} else if (positionSlider.getOrientation() == JSlider.VERTICAL) {
+				value = positionSlider.getMousePosition().y;
+			}
+			int positionValue = (int) (value * mediaPlayer.getLength() / positionSlider.getWidth());
+			// System.out
+			// .println(value + " " + positionValue + " " +
+			// mediaPlayer.getLength()
+			// + " " + positionSlider.getWidth());
+			// Avoid end of file freeze-up
+			/*
+			 * if (positionValue > 0.99f) { positionValue = 0.99f; }
+			 */
+			mediaPlayer.setTime(positionValue);
 		}
-		int positionValue = (int) (value * mediaPlayer.getLength() / positionSlider.getWidth());
-		// System.out
-		// .println(value + " " + positionValue + " " + mediaPlayer.getLength()
-		// + " " + positionSlider.getWidth());
-		// Avoid end of file freeze-up
-		/*
-		 * if (positionValue > 0.99f) { positionValue = 0.99f; }
-		 */
-		mediaPlayer.setTime(positionValue);
 	}
 
 	private void updateUIState() {
@@ -391,7 +394,7 @@ public class PlayerControlsPanel extends JPanel {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				
+
 				int value = positionSlider.getValue();
 
 				if (positionSlider.getMousePosition() != null) {
