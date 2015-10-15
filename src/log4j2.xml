@@ -21,7 +21,7 @@
 		<Root level="TRACE">
 			<appender-ref ref="TraceFile" level="TRACE" />
 		</Root>
-		<logger name="com.vid.log.com" level="TRACE" additivity="false">
+		<logger name="com.vid.log.trace" level="TRACE" additivity="false">
 			<AppenderRef ref="Console" />
 			<appender-ref ref="TraceFile" level="TRACE" />
 		</logger>
@@ -29,8 +29,7 @@
 			<AppenderRef ref="Console" />
 			<appender-ref ref="ErrorFile" level="ERROR" />
 		</logger>
-		<logger name="com.org.log.overlay" level="TRACE" additivity="TRUE">
-			<AppenderRef ref="Console" />
+		<logger name="com.vid.log.trace.overlay" level="TRACE" additivity="false">
 			<appender-ref ref="OverlayFile" level="TRACE" />
 		</logger>
 	</Loggers>

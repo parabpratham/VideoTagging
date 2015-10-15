@@ -1,4 +1,4 @@
-package com.vid.log.overlay;
+package com.vid.log.trace.overlay;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +9,8 @@ public class OverlayLog {
 
 	public OverlayLog() {
 		logger = LogManager.getLogger(OverlayLog.class);
-		logger.trace("OverlayLog :: Overlay Messages ::");
+		logger.trace("OverlayLog :: Overlay Messages :: ------------------------------ ");
+		logger.trace("---------------------------New Run------------------------------ ");
 	}
 
 	public void trace(String msg) {
