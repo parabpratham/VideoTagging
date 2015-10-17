@@ -6,13 +6,13 @@ import java.awt.event.MouseWheelEvent;
 
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
-public class TestPlayerMouseListener extends MouseAdapter {
+public class PlayerMouseListener extends MouseAdapter {
 
 	FullScreenStatergy fullScreenStatergy;
 
 	EmbeddedMediaPlayer mediaPlayer;
 
-	public TestPlayerMouseListener(FullScreenStatergy fullScreenStatergy, EmbeddedMediaPlayer mediaPlayer) {
+	public PlayerMouseListener(FullScreenStatergy fullScreenStatergy, EmbeddedMediaPlayer mediaPlayer) {
 
 		this.fullScreenStatergy = fullScreenStatergy;
 		this.mediaPlayer = mediaPlayer;

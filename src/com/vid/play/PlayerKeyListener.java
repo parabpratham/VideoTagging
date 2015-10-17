@@ -3,7 +3,7 @@ package com.vid.play;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class TestPlayerKeyListener extends KeyAdapter {
+public class PlayerKeyListener extends KeyAdapter {
 
 	@Override
 	public void keyPressed(KeyEvent e) {

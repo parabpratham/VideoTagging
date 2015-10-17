@@ -93,11 +93,10 @@ public class PlayerControlsPanel extends JPanel {
 
 	private OverLayGenerator generator;
 
-	public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, OverLayGenerator generator) {
-		this.mediaPlayer = mediaPlayer;
-		this.generator = generator;
+	public PlayerControlsPanel() {
+		this.mediaPlayer = CustomeVideoPlayer.getMediaPlayer();
+		this.generator = CustomeVideoPlayer.getOverLayGenerator();
 		createUI();
-
 		executorService.scheduleAtFixedRate(new UpdateRunnable(mediaPlayer), 0L, 1L, TimeUnit.SECONDS);
 	}
 
@@ -328,8 +327,10 @@ public class PlayerControlsPanel extends JPanel {
 			playPauseButton.setToolTipText("Play/pause");
 			isPlaying = true;
 
-			if (generator == null)
-				generator = new OverLayGenerator(mediaPlayer);
+			// If stooped and then played
+			/*
+			 * if (generator == null) generator = new OverLayGenerator();
+			 */
 
 			// Set overlay
 			mediaPlayer.enableOverlay(true);
@@ -493,12 +494,14 @@ public class PlayerControlsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mediaPlayer.enableOverlay(false);
-				generator.stopVideoOerlays();
+
 				if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
 					mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
 				}
 
-				generator = new OverLayGenerator(mediaPlayer);
+				// Added to set new media to the overlay generator
+				generator.stopVideoOerlays();
+				generator = new OverLayGenerator();
 				mediaPlayer.enableOverlay(true);
 
 			}

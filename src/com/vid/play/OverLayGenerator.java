@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
@@ -13,6 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
 import com.sun.awt.AWTUtilities;
@@ -32,28 +38,42 @@ public class OverLayGenerator {
 
 	private final EmbeddedMediaPlayer mediaPlayer;
 
+	// For displaying information in the information panel
+	private VideoInformationDisplayPanel videoInfoPanel;
+
 	private long currentTime;
 	private ThreadGroup tg;
 
-	public final static Object obj = new Object();
-	public final static Object og = new Object();
-	public final static Object overlay = new Object();
+	private final JFrame mainFrame;
 
 	private final OverlayLog overalyTrace;
 
-	public OverLayGenerator(EmbeddedMediaPlayer mediaPlayer) {
+	/**
+	 * 
+	 * Constructor for the OverlayGenerator class
+	 * 
+	 * @param mediaPlayer
+	 * @param mainFrame
+	 */
+	public OverLayGenerator() {
+
+		// Initialize components
 		overalyTrace = AppLogger.getOverlayLog();
-		this.mediaPlayer = mediaPlayer;
+		this.mediaPlayer = CustomeVideoPlayer.getMediaPlayer();
+		this.mainFrame = CustomeVideoPlayer.getMainFrame();
+		overlays = new HashMap<Integer, CustomeOverlays>();
+		this.videoInfoPanel = CustomeVideoPlayer.getVideoInformationDisplayPanel();
+
+		// Check if Transparent video overlay is supported
 		isTransperantWindowSupport = true;
 		try {
 			Class.forName("com.sun.awt.AWTUtilities");
 		} catch (Exception e) {
 			isTransperantWindowSupport = false;
 		}
-		overlays = new HashMap<Integer, CustomeOverlays>();
 
 		tg = new ThreadGroup("Overlays Threads");
-		new Thread(tg, new GenerateOverlays(), "Generate_Overlay").start();
+		new Thread(tg, new OverlayFactory(), "Generate_Overlay").start();
 		overalyTrace.trace(tg.activeCount() + " threads in thread group.");
 
 		registerListeners();
@@ -77,7 +97,6 @@ public class OverLayGenerator {
 
 			@Override
 			public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
-				// TODO Auto-generated method stub
 				super.timeChanged(mediaPlayer, newTime);
 				new Thread(new DisplayOverlays(mediaPlayer, newTime), "Generate_Overlay").start();
 			}
@@ -103,6 +122,8 @@ public class OverLayGenerator {
 		}
 
 	}
+
+	public final static Object overlay = new Object();
 
 	private final class DisplayOverlays implements Runnable {
 
@@ -130,6 +151,7 @@ public class OverLayGenerator {
 						// " " + startTime + " " + currentTime);
 						overalyTrace.trace(Thread.currentThread().getName() + " " + startTime + " " + currentTime);
 						CustomeOverlays customeOverlay = overlays.get(startTime);
+						// TODO replace with appropriate
 						if (startTime <= currentTime + 267) {
 							if (customeOverlay == null) {
 								break;
@@ -175,12 +197,27 @@ public class OverLayGenerator {
 		}
 	}
 
-	private final class GenerateOverlays implements Runnable {
+	public final static Object obj = new Object();
+	public final static Object og = new Object();
+
+	/**
+	 * @author pratham
+	 * 
+	 *         This class is used to generate the overlays that are added to a
+	 *         hash-map with its starting time as key. The overlays are stored
+	 *         in a XML file and are pre-loaded as the media starts playing
+	 *
+	 */
+	private final class OverlayFactory implements Runnable {
 
 		int i = 0;
 
 		@Override
 		public void run() {
+			generateOveralys();
+		}
+
+		private void generateOveralys() {
 			// System.out.println(Thread.currentThread().getName() + "
 			// Started");
 			overalyTrace.trace(Thread.currentThread().getName() + " Started");
@@ -204,10 +241,10 @@ public class OverLayGenerator {
 								// System.out.println(Thread.currentThread().getName()
 								// + " Overlay generated " + i);
 								overalyTrace.trace(Thread.currentThread().getName() + " Overlay generated " + i);
-								if (i == 0 && currentTime < 1000000)
-									overlays.put(1000000, new CustomeOverlays(1000000, 1200000, draw()));
-								else if (currentTime < 5103365)
-									overlays.put(5103365, new CustomeOverlays(5103365, 6103365, draw1()));
+								if (i == 0 && currentTime < 20000)
+									overlays.put(20000, new CustomeOverlays(20000, 1200000, draw()));
+								else if (currentTime < 1000)
+									overlays.put(1000, new CustomeOverlays(1000, 30000, draw2()));
 								i++;
 							}
 						} catch (Exception e) {
@@ -243,10 +280,15 @@ public class OverLayGenerator {
 		}
 	}
 
+	private Window draw2() {
+		Overlay overlay = new Overlay(null);
+		return overlay;
+	}
+
 	private Window draw() {
-		Window test = null;
+		JWindow test = null;
 		if (isTransperantWindowSupport) {
-			test = new Window(null, WindowUtils.getAlphaCompatibleGraphicsConfiguration()) {
+			test = new JWindow(null, WindowUtils.getAlphaCompatibleGraphicsConfiguration()) {
 				private static final long serialVersionUID = 1L;
 
 				@Override
@@ -278,19 +320,20 @@ public class OverLayGenerator {
 														// JDK
 			test.setBackground(new Color(0, 0, 0, 0)); // This is what you
 														// do in
+
+			JTextArea superImposedLightweigtLabel = new JTextArea("Hello, VLC.");
+			superImposedLightweigtLabel.setOpaque(false);
+			test.getContentPane().add(superImposedLightweigtLabel);
+			superImposedLightweigtLabel.setVisible(true);
+
 		}
-		test.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-		});
 		return test;
 	}
 
 	private Window draw1() {
-		Window test = null;
+		JWindow test = null;
 		if (isTransperantWindowSupport) {
-			test = new Window(null, WindowUtils.getAlphaCompatibleGraphicsConfiguration()) {
+			test = new JWindow(null, WindowUtils.getAlphaCompatibleGraphicsConfiguration()) {
 				private static final long serialVersionUID = 1L;
 
 				@Override
@@ -322,7 +365,41 @@ public class OverLayGenerator {
 														// JDK
 			test.setBackground(new Color(0, 0, 0, 0)); // This is what you
 														// do in
+
+			final JLabel superImposedLightweigtLabel = new JLabel("Hello, VLC.", JLabel.CENTER);
+			superImposedLightweigtLabel.setOpaque(false);
+			test.getContentPane().add(superImposedLightweigtLabel);
+			superImposedLightweigtLabel.setVisible(true);
 		}
+
+		test.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Point point = e.getPoint();
+				overalyTrace.trace("Ovelay mouse Clicked " + point);
+				System.out.println("Ovelay mouse Clicked " + point);
+
+				if (new Rectangle(200, 250, 100, 100).contains(point)) {
+					overalyTrace.trace("Ovelay mouse showed " + point);
+					videoInfoPanel.setTitleText(" Hi rectangle " + point);
+				}
+				if (new Rectangle(100, 80, 10000, 20).contains(point)) {
+					overalyTrace.trace("Ovelay mouse entered " + point);
+					videoInfoPanel.setTitleText(" Hi string " + point);
+				}
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				Point point = e.getPoint();
+				overalyTrace.trace("Ovelay mouse entered " + point);
+				// System.out.println("Ovelay mouse entered " + point);
+				super.mouseEntered(e);
+			}
+		});
+
 		return test;
 	}
 
@@ -345,4 +422,5 @@ public class OverLayGenerator {
 
 		}
 	}
+
 }
