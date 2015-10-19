@@ -10,17 +10,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
-import javafx.stage.FileChooser;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
-public class CustomeMenuBar {
+public class CustomMenuBar {
 
 	private static final JMenuBar menuBar = new JMenuBar();
-	private static final EmbeddedMediaPlayer mediaPlayer = CustomeVideoPlayer.getMediaPlayer();
-	private static final JFileChooser fileChooser = CustomeVideoPlayer.getFilechooser();
-	private static final JFrame mainFrame = CustomeVideoPlayer.getMainFrame();;
+	private static final EmbeddedMediaPlayer mediaPlayer = CustomVideoPlayer.getMediaPlayer();
+	private static final JFileChooser fileChooser = CustomVideoPlayer.getFilechooser();
+	private static final JFrame mainFrame = CustomVideoPlayer.getMainFrame();;
 
-	public CustomeMenuBar() {
+	public CustomMenuBar() {
 
 		// Menus are just added as an example of overlapping the video - they
 		// are
@@ -37,7 +36,7 @@ public class CustomeMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				mediaPlayer.enableOverlay(false);
 				if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(mainFrame)) {
-					CustomeVideoPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
+					CustomVideoPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
 				}
 				mediaPlayer.enableOverlay(true);
 			}

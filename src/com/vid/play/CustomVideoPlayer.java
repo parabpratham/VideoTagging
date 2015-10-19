@@ -23,11 +23,11 @@ import com.vid.execute.AppLogger;
 import com.vid.log.trace.TraceLog;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
-import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
-public class CustomeVideoPlayer {
+public class CustomVideoPlayer {
+	
 
 	private static final int width = 800;
 	private static final int height = 600;
@@ -61,7 +61,7 @@ public class CustomeVideoPlayer {
 	 * These are all static and will be common across all the classes
 	 * 
 	 */
-	public CustomeVideoPlayer() {
+	public CustomVideoPlayer() {
 
 		List<String> vlcArgs = new ArrayList<String>();
 		vlcArgs.add("--no-snapshot-preview");
@@ -229,8 +229,8 @@ public class CustomeVideoPlayer {
 	 * @param mediaAdd
 	 */
 	public static void playMedia(String mediaAdd) {
-		getMediaPlayer().playMedia(mediaAdd);
 		parseInformation();
+		getMediaPlayer().playMedia(mediaAdd);
 		getMediaPlayer().mute();
 	}
 
@@ -238,33 +238,37 @@ public class CustomeVideoPlayer {
 	 * Get information of the media currently playing
 	 */
 	private static void parseInformation() {
-		getVideoMediaPlayerComponent().getMediaPlayer().prepareMedia(getVideoAdd());
-		getVideoMediaPlayerComponent().getMediaPlayer().requestParseMedia();
 
-		MediaPlayer mediaPlayer = getVideoMediaPlayerComponent().getMediaPlayer();
-		int titleCount = mediaPlayer.getTitleCount();
-		int title = mediaPlayer.getTitle();
-		logger.trace("Video Title " + titleCount + " " + title + " " + mediaPlayer.getTitleDescriptions().size());
-		// mediaPlayer.setTitle(newTitle);
+		try {
+			getMediaPlayer().prepareMedia(getVideoAdd());
+			getMediaPlayer().requestParseMedia();
 
-		int videoTrackCount = mediaPlayer.getVideoTrackCount();
-		int videoTrack = mediaPlayer.getVideoTrack();
-		logger.trace("VideoTrack " + videoTrackCount + " " + videoTrack);
-		// mediaPlayer.setVideoTrack(newVideoTrack);
+			int titleCount = getMediaPlayer().getTitleCount();
+			int title = getMediaPlayer().getTitle();
+			logger.trace("Video Title " + titleCount + " " + title + " " + mediaPlayer.getTitleDescriptions().size());
+			// mediaPlayer.setTitle(newTitle);
 
-		int audioTrackCount = mediaPlayer.getAudioTrackCount();
-		int audioTrack = mediaPlayer.getVideoTrack();
-		logger.trace("AudioTrack " + audioTrackCount + " " + audioTrack);
-		// mediaPlayer.setAudioTrack(newAudioTrack);
+			int videoTrackCount = getMediaPlayer().getVideoTrackCount();
+			int videoTrack = getMediaPlayer().getVideoTrack();
+			logger.trace("VideoTrack " + videoTrackCount + " " + videoTrack);
+			// mediaPlayer.setVideoTrack(newVideoTrack);
 
-		int spuTrackCount = mediaPlayer.getSpuCount();
-		int spuTrack = mediaPlayer.getVideoTrack();
-		logger.trace("SubtitleTrackCount " + spuTrackCount + " " + spuTrack);
-		// mediaPlayer.setSpu(newSpuTrack);
+			int audioTrackCount = getMediaPlayer().getAudioTrackCount();
+			int audioTrack = getMediaPlayer().getVideoTrack();
+			logger.trace("AudioTrack " + audioTrackCount + " " + audioTrack);
+			// mediaPlayer.setAudioTrack(newAudioTrack);
 
-		int chapterCount = mediaPlayer.getChapterCount();
-		int currentChapter = mediaPlayer.getChapter();
-		logger.trace("ChapterCount " + chapterCount + " " + currentChapter);
+			int spuTrackCount = getMediaPlayer().getSpuCount();
+			int spuTrack = getMediaPlayer().getVideoTrack();
+			logger.trace("SubtitleTrackCount " + spuTrackCount + " " + spuTrack);
+			// mediaPlayer.setSpu(newSpuTrack);
+
+			int chapterCount = getMediaPlayer().getChapterCount();
+			int currentChapter = getMediaPlayer().getChapter();
+			logger.trace("ChapterCount " + chapterCount + " " + currentChapter);
+		} catch (Exception e) {
+			logger.error(CustomVideoPlayer.class.getName() + "-- Parse Information -- " + e.getMessage());
+		}
 
 	}
 
@@ -275,8 +279,8 @@ public class CustomeVideoPlayer {
 	 * @return instance of the menu bar
 	 */
 	private JMenuBar buildMenuBar() {
-		new CustomeMenuBar();
-		return CustomeMenuBar.getMenubar();
+		new CustomMenuBar();
+		return CustomMenuBar.getMenubar();
 	}
 
 	public static JFrame getMainFrame() {
@@ -288,7 +292,7 @@ public class CustomeVideoPlayer {
 	}
 
 	public static void setMediaPlayerFactory(MediaPlayerFactory mediaPlayerFactory) {
-		CustomeVideoPlayer.mediaPlayerFactory = mediaPlayerFactory;
+		CustomVideoPlayer.mediaPlayerFactory = mediaPlayerFactory;
 	}
 
 	public static EmbeddedMediaPlayer getMediaPlayer() {
@@ -296,7 +300,7 @@ public class CustomeVideoPlayer {
 	}
 
 	public static void setMediaPlayer(EmbeddedMediaPlayer mediaPlayer) {
-		CustomeVideoPlayer.mediaPlayer = mediaPlayer;
+		CustomVideoPlayer.mediaPlayer = mediaPlayer;
 	}
 
 	public static String getVideoAdd() {
@@ -308,7 +312,7 @@ public class CustomeVideoPlayer {
 	}
 
 	public static void setControlsPanel(PlayerControlsPanel controlsPanel) {
-		CustomeVideoPlayer.controlsPanel = controlsPanel;
+		CustomVideoPlayer.controlsPanel = controlsPanel;
 	}
 
 	public static EmbeddedMediaPlayerComponent getVideoMediaPlayerComponent() {
@@ -316,7 +320,7 @@ public class CustomeVideoPlayer {
 	}
 
 	public static void setVideoMediaPlayerComponent(EmbeddedMediaPlayerComponent videoMediaPlayerComponent) {
-		CustomeVideoPlayer.videoMediaPlayerComponent = videoMediaPlayerComponent;
+		CustomVideoPlayer.videoMediaPlayerComponent = videoMediaPlayerComponent;
 	}
 
 	public static FullScreenStatergy getFullScreenStrategy() {
@@ -324,7 +328,7 @@ public class CustomeVideoPlayer {
 	}
 
 	public static void setFullScreenStrategy(FullScreenStatergy fullScreenStrategy) {
-		CustomeVideoPlayer.fullScreenStrategy = fullScreenStrategy;
+		CustomVideoPlayer.fullScreenStrategy = fullScreenStrategy;
 	}
 
 	public static OverLayGenerator getOverLayGenerator() {
@@ -332,7 +336,7 @@ public class CustomeVideoPlayer {
 	}
 
 	public static void setOverLayGenerator(OverLayGenerator overLayGenerator) {
-		CustomeVideoPlayer.overLayGenerator = overLayGenerator;
+		CustomVideoPlayer.overLayGenerator = overLayGenerator;
 	}
 
 	public static VideoInformationDisplayPanel getVideoInformationDisplayPanel() {
@@ -340,7 +344,7 @@ public class CustomeVideoPlayer {
 	}
 
 	public static void setVideoInformationDisplayPanel(VideoInformationDisplayPanel videoInformationDisplayPanel) {
-		CustomeVideoPlayer.videoInformationDisplayPanel = videoInformationDisplayPanel;
+		CustomVideoPlayer.videoInformationDisplayPanel = videoInformationDisplayPanel;
 	}
 
 	public static PlayerVideoAdjustPanel getVideoAdjustPanel() {
@@ -348,7 +352,7 @@ public class CustomeVideoPlayer {
 	}
 
 	public static void setVideoAdjustPanel(PlayerVideoAdjustPanel videoAdjustPanel) {
-		CustomeVideoPlayer.videoAdjustPanel = videoAdjustPanel;
+		CustomVideoPlayer.videoAdjustPanel = videoAdjustPanel;
 	}
 
 	public static Canvas getVideosurface() {
