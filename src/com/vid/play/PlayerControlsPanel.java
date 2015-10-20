@@ -45,8 +45,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
+import com.vid.commons.Helper;
+
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.binding.internal.libvlc_marquee_position_e;
+import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.Marquee;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -61,7 +64,7 @@ public class PlayerControlsPanel extends JPanel {
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-	private final EmbeddedMediaPlayer mediaPlayer;
+	private static final EmbeddedMediaPlayer mediaPlayer = CustomVideoPlayer.getMediaPlayer();;
 
 	private JLabel timeLabel;
 	// private JProgressBar positionProgressBar;
@@ -91,11 +94,9 @@ public class PlayerControlsPanel extends JPanel {
 
 	private boolean mousePressedPlaying = false;
 
-	private OverLayGenerator generator;
+	private final static OverLayGenerator generator = CustomVideoPlayer.getOverLayGenerator();;
 
 	public PlayerControlsPanel() {
-		this.mediaPlayer = CustomeVideoPlayer.getMediaPlayer();
-		this.generator = CustomeVideoPlayer.getOverLayGenerator();
 		createUI();
 		executorService.scheduleAtFixedRate(new UpdateRunnable(mediaPlayer), 0L, 1L, TimeUnit.SECONDS);
 	}
@@ -313,7 +314,7 @@ public class PlayerControlsPanel extends JPanel {
 			isPlaying = false;
 
 			// Remove overlay
-			mediaPlayer.enableOverlay(false);
+			// mediaPlayer.enableOverlay(false);
 
 			mediaPlayer.pause();
 		} else {
@@ -333,10 +334,8 @@ public class PlayerControlsPanel extends JPanel {
 			 */
 
 			// Set overlay
-			mediaPlayer.enableOverlay(true);
+			// mediaPlayer.enableOverlay(true);
 
-			if (isPlaying)
-				mediaPlayer.play();
 		}
 
 	}
@@ -344,7 +343,16 @@ public class PlayerControlsPanel extends JPanel {
 	private boolean isPlaying = false;
 
 	private void registerListeners() {
+
 		mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+
+			@Override
+			public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
+				((EmbeddedMediaPlayer) mediaPlayer).enableOverlay(false);
+				super.mediaChanged(mediaPlayer, media, mrl);
+				((EmbeddedMediaPlayer) mediaPlayer).enableOverlay(true);
+			}
+
 			@Override
 			public void playing(MediaPlayer mediaPlayer) {
 				// updateVolume(mediaPlayer.getVolume());
@@ -437,11 +445,11 @@ public class PlayerControlsPanel extends JPanel {
 		stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				generator.stopVideoOerlays();
+				generator.enableOverlay(false);
 				playPauseButton
 						.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_play_blue.png")));
+				positionSlider.setValue(0);
 				mediaPlayer.stop();
-				generator = null;
 			}
 		});
 
@@ -494,15 +502,13 @@ public class PlayerControlsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mediaPlayer.enableOverlay(false);
-
 				if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
 					mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
 				}
 
 				// Added to set new media to the overlay generator
 				generator.stopVideoOerlays();
-				generator = new OverLayGenerator();
-				mediaPlayer.enableOverlay(true);
+				generator.enableOverlay(true);
 
 			}
 		});
