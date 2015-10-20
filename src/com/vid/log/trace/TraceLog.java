@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 public class TraceLog {
 
 	Logger logger;
-
+	
 	public TraceLog() {
 		logger = LogManager.getLogger(TraceLog.class);
 		logger.error("TraceLog :: Trace Messages ::-----------------------------------");
@@ -19,6 +19,10 @@ public class TraceLog {
 
 	public void debug(String msg) {
 		logger.debug(msg);
+	}
+
+	public void error(String msg) {
+		logger.error(msg);
 	}
 
 }
