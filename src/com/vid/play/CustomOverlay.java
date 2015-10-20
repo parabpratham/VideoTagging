@@ -14,7 +14,7 @@ import com.sun.jna.platform.WindowUtils;
 import com.vid.commons.SupportedColors;
 import com.vid.overlay.comp.Jcomp.CustomLabel;
 
-public class CustomeOverlay extends JWindow {
+public class CustomOverlay extends JWindow {
 
 	private static final long serialVersionUID = -730047965056443654L;
 
@@ -23,7 +23,7 @@ public class CustomeOverlay extends JWindow {
 
 	private int i;
 
-	public CustomeOverlay(Window owner, int startTime, int endTime, int i) {
+	public CustomOverlay(Window owner, int startTime, int endTime, int i) {
 
 		super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 		AWTUtilities.setWindowOpaque(this, false);
