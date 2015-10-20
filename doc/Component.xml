@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Video_tags>
+	<component_types>
+		<component_type id="JComponent">
+			<Description>
+				Interactive Components (Closable)
+			</Description>
+		</component_type>
+		<component_type id="Shape">
+			<Description>
+				2d figuers
+			</Description>
+		</component_type>
+		<component_type id="Image">
+			<Description>
+				Logo files/stickers/Images
+			</Description>
+		</component_type>
+		<component_type id="EntireVideoComment">
+			<Description>
+				Logo/Icon will be diplayed, on click info in VIP changes
+			</Description>
+		</component_type>
+		<component_type id="AnnotationMarkers">
+			<Description>
+				icons/logo files, on click info in VIP changes
+			</Description>
+		</component_type>
+	</component_types>
+
+	<shape_types>
+		<shape_type id="Rectangle" index="0">
+			<parameters>
+				startpoint,endpoint,fillArea,color,rectangular
+			</parameters>
+		</shape_type>
+		<shape_type id="line" index="1">
+			<parameters>
+				startpoint,endpoint,color
+			</parameters>
+		</shape_type>
+		<shape_type id="oval">
+			<parameters>
+				startpoint,width,height,color,fillArea
+			</parameters>
+		</shape_type>
+		<shape_type id="polygon">
+			<parameters>
+				Points[] , numberOfPoints,color,fillArea
+			</parameters>
+		</shape_type>
+		<shape_type id="string">
+			<parameters>
+				string,posX,posY,color
+			</parameters>
+		</shape_type>
+		<shape_type id="image">
+			<parameters>
+				image,startpoint,width,height
+			</parameters>
+		</shape_type>
+		<shape_type id="arrow">
+			<!-- Can be drawn as polygon -->
+			<parameters>
+				image,startpoint,width,length,color,fill
+			</parameters>
+		</shape_type>
+	</shape_types>
+
+	<elements>
+		<element id="SpotLight">
+			<Description>
+				1> Highlight a particular region
+				2> Add hyperlink
+			</Description>
+			<sample_image path="" />
+			<parameters>
+				<component_type id='JComponent'>
+					<component_link_type id="1"> link_to_same_video
+					</component_link_type>
+					<component_link_type id="2"> link to_other_video
+					</component_link_type>
+					<component_link_type id="3"> link to_other_web_page
+					</component_link_type>
+				</component_type>
+				<shape_type id="Rectangle" />
+				<onclick>
+					<action id="1"> Seek to particular location </action>
+					<action id="2"> Open another video </action>
+					<action id="3"> Diplay link/open in browser </action>
+				</onclick>
+			</parameters>
+		</element>
+		<element id="Labels">
+			<Description>
+				1> Organize videos
+			</Description>
+			<sample_image path="" />
+			<component_type id='JComponent' />
+			<parameters>
+				<shape_type id="Rectangle" />
+			</parameters>
+		</element>
+		<element id="notes">
+			<Description>
+				Clickable buttons
+			</Description>
+			<sample_image>
+			</sample_image>
+			<parameters>
+				<shape_type id="image" />
+			</parameters>
+		</element>
+		<element id="speech_bubbles">
+			<Description>
+				Announcements / links to real videos
+			</Description>
+			<sample_image path="" />
+			<component_type id='JComponent' />
+			<parameters>
+				<component_type id='JComponent'>
+					<component_link_type id="1"> link_to_same_video
+					</component_link_type>
+					<component_link_type id="2"> link to_other_video
+					</component_link_type>
+					<component_link_type id="3"> link to_other_web_page
+					</component_link_type>
+				</component_type>
+				<shape_type id="Rectangle" />
+				<onclick>
+					<action id="1"> Seek to particular location </action>
+					<action id="2"> Open another video </action>
+					<action id="3"> Diplay link/open in browser </action>
+				</onclick>
+			</parameters>
+		</element>
+		<element id="comments">
+			<Description>
+				Comments for a particular part of videos
+			</Description>
+			<sample_image path="" />
+			<component_type id='JComponent' />
+			<parameters>
+				<shape_type id="Rectangle">
+					Rounded Rectangle
+				</shape_type>
+			</parameters>
+		</element>
+		<element id="EntireVideoComment">
+			<Description>
+				Comments for a entire length of video
+				// Not devided yet
+				maybe to minimize option provided
+			</Description>
+			<sample_image path="" />
+			<component_type id='EntireVideoComment' />
+			<parameters>
+				<shape_type id="Rectangle">
+					Rounded Rectangle
+				</shape_type>
+			</parameters>
+		</element>
+		<element id="image">
+			<Description>
+				Overlay an image
+			</Description>
+			<parameters>
+				<shape_type id="image" />
+			</parameters>
+		</element>
+		<element id="AnnotationMarkers">
+			<Description>
+				Simple logos/icons on hover text displays/have an effect/change info
+				display
+			</Description>
+			<sample_image>
+			    
+			</sample_image>
+			<parameters>
+			    
+			</parameters>
+		</element>
+	</elements>
+</Video_tags>
