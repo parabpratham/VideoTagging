@@ -2,7 +2,7 @@ package com.vid.execute;
 
 import javax.swing.SwingUtilities;
 
-import com.vid.play.CustomeVideoPlayer;
+import com.vid.play.CustomVideoPlayer;
 
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 
@@ -14,7 +14,7 @@ public class RunVideoPlayer {
 			@Override
 			public void run() {
 				new AppLogger();
-				new CustomeVideoPlayer();
+				new CustomVideoPlayer();
 			}
 		});
 	}
