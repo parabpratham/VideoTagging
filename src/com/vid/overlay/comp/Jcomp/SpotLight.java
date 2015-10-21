@@ -8,20 +8,18 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.swing.ImageIcon;
+import javax.swing.JTextPane;
 
 import com.vid.overlay.comp.master.COMPONENT_TYPE;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 import com.vid.play.CustomVideoPlayer;
 import com.vid.play.OverLayGenerator;
-import com.vid.play.PlayerControlsPanel;
 import com.vid.test.CustomMediaPlayerFactory;
-
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class SpotLight extends CustomComponent {
 
@@ -47,6 +45,8 @@ public class SpotLight extends CustomComponent {
 
 	private String media_address;
 
+	private JTextPane textPane;
+
 	// Constructor for same_video
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
 			Color displayStringColor, Image componentImage, String hoverString, Link_type link_type, int skip_time) {
@@ -58,6 +58,9 @@ public class SpotLight extends CustomComponent {
 		setLink_type(link_type);
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
+		setTextArea();
+		textPane.setVisible(false);
+
 	}
 
 	// Constructor for other_video
@@ -73,6 +76,8 @@ public class SpotLight extends CustomComponent {
 		setMedia_address(media_Address);
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
+		setTextArea();
+		textPane.setVisible(false);
 	}
 
 	// Constructor for web_link
@@ -87,11 +92,32 @@ public class SpotLight extends CustomComponent {
 		setLink_type(link_type);
 		setLink_address(link_address);
 		setComponentImage(componentImage);
+		setTextArea();
 		try {
 			setUri(new URI(getLink_address()));
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
+		textPane.setVisible(false);
+	}
+
+	@Override
+	public synchronized void addMouseListener(MouseListener l) {
+		l = new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				super.mouseEntered(e);
+				textPane.setVisible(true);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				super.mouseExited(e);
+				textPane.setVisible(false);
+			}
+		};
+
+		super.addMouseListener(l);
 	}
 
 	@Override
@@ -144,9 +170,8 @@ public class SpotLight extends CustomComponent {
 			g2.drawImage(getComponentImage(), 0, 0, getWidth() - 1, getHeight() - 1, null);
 		g2.setPaint(Color.black);
 		g2.setFont(getFont());
-		// TODO edit the starting position so that always center of the label
-		// box
-		g2.drawString(getDisplayString(), 10, 16);
+
+		// g2.drawString(getDisplayString(), 10, 16);
 	}
 
 	public enum Link_type {
@@ -223,6 +248,22 @@ public class SpotLight extends CustomComponent {
 
 	public static COMPONENT_TYPE getComponentType() {
 		return component_type;
+	}
+
+	public JTextPane getTextArea() {
+		return textPane;
+	}
+
+	public void setTextArea() {
+		textPane = new JTextPane();
+		textPane.setBackground(new Color(255, 0, 0, 50));
+		//textPane.setCaretColor(getDisplayStringColor());
+		textPane.setText(getDisplayString());
+		textPane.setBounds(getStartX(), getStartY() + getHeight(), getWidth(), getFont().getSize() + 5);
+	}
+
+	public void setTextArea(JTextPane textArea) {
+		this.textPane = textArea;
 	}
 
 }
