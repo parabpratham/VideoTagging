@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.vid.log.error.ErrorLog;
 import com.vid.log.trace.TraceLog;
+import com.vid.log.trace.overlay.JComponentLog;
 import com.vid.log.trace.overlay.OverlayLog;
 
 public class AppLogger {
@@ -15,12 +16,15 @@ public class AppLogger {
 
 	static OverlayLog overlayLog;
 
+	static JComponentLog jComponentLog;
+
 	public AppLogger() {
 		System.setProperty("log4j.configurationFile",
 				"file:K:/Install/Study/Programming/SpringWorkspace/VideoPlayer/src/log4j2.xml");
 		traceLog = new TraceLog();
 		overlayLog = new OverlayLog();
 		errorLog = new ErrorLog();
+		jComponentLog = new JComponentLog();
 	}
 
 	public static Logger getLogger() {
@@ -37,6 +41,10 @@ public class AppLogger {
 
 	public static OverlayLog getOverlayLog() {
 		return overlayLog;
+	}
+
+	public static JComponentLog getJComponentLog() {
+		return jComponentLog;
 	}
 
 	public static void main(String[] args) {
