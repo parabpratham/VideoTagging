@@ -46,6 +46,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.vid.commons.Helper;
+import com.vid.test.CustomMediaPlayerFactory;
 
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.binding.internal.libvlc_marquee_position_e;
@@ -317,6 +318,7 @@ public class PlayerControlsPanel extends JPanel {
 			// mediaPlayer.enableOverlay(false);
 
 			mediaPlayer.pause();
+			// CustomMediaPlayerFactory.pause();
 		} else {
 
 			Marquee marquee1 = Marquee.marquee().text("Play").size(40).colour(Color.WHITE).timeout(3000)
@@ -335,7 +337,7 @@ public class PlayerControlsPanel extends JPanel {
 
 			// Set overlay
 			// mediaPlayer.enableOverlay(true);
-
+			CustomMediaPlayerFactory.playMedias();
 		}
 
 	}
@@ -449,7 +451,9 @@ public class PlayerControlsPanel extends JPanel {
 				playPauseButton
 						.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_play_blue.png")));
 				positionSlider.setValue(0);
-				mediaPlayer.stop();
+				totallengthLabel.setText("hh:mm:ss");
+				timeLabel.setText("hh:mm:ss");
+				CustomMediaPlayerFactory.stopMedia();
 			}
 		});
 
@@ -581,7 +585,7 @@ public class PlayerControlsPanel extends JPanel {
 			});
 		}
 	}
-
+	
 	private void updateTime(long millis) {
 		String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
 				TimeUnit.MILLISECONDS.toMinutes(millis)
@@ -643,5 +647,10 @@ public class PlayerControlsPanel extends JPanel {
 	public void setFileChooser(JFileChooser fileChooser) {
 		this.fileChooser = fileChooser;
 	}
-
+	
+	public void setPauseIcon(){
+		playPauseButton
+		.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_play_blue.png")));
+	}
+	
 }
