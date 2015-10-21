@@ -167,9 +167,7 @@ public class CustomComponent extends JComponent {
 		closeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println(closeButton.getParent()
-						.getComponentAt(closeButton.getX() - getWidth(), closeButton.getY()).isVisible());
-				closeButton.getParent().getComponentAt(closeButton.getX() - getWidth(), closeButton.getY())
+				closeButton.getParent().getComponentAt(closeButton.getX() - getWidth() + 10, closeButton.getY() + 10)
 						.setVisible(false);
 				closeButton.setVisible(false);
 			}
