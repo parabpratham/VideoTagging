@@ -21,36 +21,40 @@ package com.vid.test;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Iterator;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
 import com.vid.commons.SupportedColors;
 import com.vid.overlay.comp.Jcomp.CustomLabel;
+import com.vid.play.CustomVideoPlayer;
 
+import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
-import uk.co.caprica.vlcj.player.MediaPlayerFactory;
+import uk.co.caprica.vlcj.medialist.MediaListItem;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.runtime.x.LibXUtil;
+import uk.co.caprica.vlcj.player.list.MediaListPlayer;
+import uk.co.caprica.vlcj.player.list.MediaListPlayerEventAdapter;
 
 /**
  * An test player demonstrating how to achieve a transparent overlay and
@@ -95,6 +99,8 @@ public class OverlayTest {
 		});
 	}
 
+	private EmbeddedMediaPlayer mediaPlayer;
+
 	public OverlayTest(String mrl) {
 		Frame f = new Frame("Test Player");
 		f.setIconImage(new ImageIcon(getClass().getResource("/icons/vlcj-logo.png")).getImage());
@@ -112,10 +118,18 @@ public class OverlayTest {
 		f.add(vs, BorderLayout.CENTER);
 		f.setVisible(true);
 
-		MediaPlayerFactory factory = new MediaPlayerFactory();
+		List<String> vlcArgs = new ArrayList<String>();
+		vlcArgs.add("--no-snapshot-preview");
+		vlcArgs.add("--quiet");
+		vlcArgs.add("--quiet-synchro");
+		vlcArgs.add("--intf");
+		vlcArgs.add("dummy");
 
-		final EmbeddedMediaPlayer mediaPlayer = factory.newEmbeddedMediaPlayer();
+		CustomMediaPlayerFactory factory = new CustomMediaPlayerFactory(vlcArgs.toArray(new String[vlcArgs.size()]));
+		mediaPlayer = CustomMediaPlayerFactory.getMediaPlayer();
 		mediaPlayer.setVideoSurface(factory.newVideoSurface(vs));
+		CustomMediaPlayerFactory.addMedia(CustomVideoPlayer.getVideoAdd());
+		CustomMediaPlayerFactory.playMedias();
 
 		f.addKeyListener(new KeyAdapter() {
 			@Override
@@ -132,12 +146,15 @@ public class OverlayTest {
 			}
 		});
 
+		// mediaPlayer.setOverlay(new CustomOverlay(null, 0, 0, 1));
 		mediaPlayer.setOverlay(new Overlay(null));
 		mediaPlayer.enableOverlay(true);
 
 		mediaPlayer.playMedia(mrl);
 
 		// LibXUtil.setFullScreenWindow(f, true);
+
+		registerListeners();
 	}
 
 	private class Overlay extends Window {
@@ -152,23 +169,75 @@ public class OverlayTest {
 			setLayout(null);
 
 			OverlayTranComp c = new OverlayTranComp();
-			c.setDisplayString("Translucent");
+			c.setDisplayString("Translucent Web");
 			c.setBounds(0, 0, 300, 40);
+			c.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					try {
+						mediaPlayer.pause();
+						Desktop.getDesktop().browse(new URI("http://www.google.com/webhp?nomo=1&hl=fr"));
+					} catch (URISyntaxException | IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					c.setForeground(new Color(255, 255, 255, 60));
+				}
+
+			});
 			add(c);
 
-			CustomLabel label = new CustomLabel(150, 200, 300, 40, new SupportedColors(Color.darkGray, 50),
-					"Hi started playing", Color.black, "Hover");
+			OverlayTranComp d = new OverlayTranComp();
+			d.setDisplayString("Translucent next video");
+			d.setBounds(300, 500, 300, 40);
+			d.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					try {
+						System.out.println("Clicked");
+						CustomMediaPlayerFactory.addMedia("file:///C:/Users/hp/Desktop/elan-example1.mpg");
+						CustomMediaPlayerFactory.stopMedia();
+						List<MediaListItem> items = CustomMediaPlayerFactory.getMediaList().items();
+						for (MediaListItem mediaListItem : items) {
+							System.out.println(mediaListItem.mrl());
+						}
+						Thread.sleep(1000);
+						CustomMediaPlayerFactory.playMedias(1);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
 
-			add(label);
-			JButton b = new JButton("JButton");
-			b.setBounds(450, 200, 10, 10);
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					d.setForeground(new Color(255, 255, 255, 60));
+				}
+
+			});
+			add(d);
+
+			OverlayTranComp b = new OverlayTranComp();
+			b.setBounds(0, 300, 300, 40);
+			b.setDisplayString("Translucent seek");
 			b.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					b.getParent().getComponentAt(b.getX() - 300, b.getY()).hide();
+					super.mouseClicked(e);
+					System.out.println(mediaPlayer.getLength() - 2000);
+					mediaPlayer.stop();
+					mediaPlayer.play(); 
+					mediaPlayer.skip(50000);
 				}
 			});
 			add(b);
+
+			CustomLabel label = new CustomLabel(150, 200, 300, 40, new SupportedColors(Color.darkGray, 50),
+					"Hi started playing", Color.black, "Hover");
+			add(label);
+			add(label.getCloseButton());
 
 		}
 
@@ -189,4 +258,37 @@ public class OverlayTest {
 			}
 		}
 	}
+
+	private void registerListeners() {
+		CustomMediaPlayerFactory.getMediaListPlayer()
+				.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
+					@Override
+					public void stopped(MediaListPlayer mediaListPlayer) {
+						super.stopped(mediaListPlayer);
+						System.out.println(mediaListPlayer + " stopped");
+						mediaPlayer.enableOverlay(false);
+					}
+
+					@Override
+					public void played(MediaListPlayer mediaListPlayer) {
+						// TODO Auto-generated method stub
+						super.played(mediaListPlayer);
+						System.out.println(mediaListPlayer + " played");
+					}
+
+					@Override
+					public void nextItem(MediaListPlayer mediaListPlayer, libvlc_media_t item, String itemMrl) {
+						super.nextItem(mediaListPlayer, item, itemMrl);
+						System.out.println(mediaListPlayer + " next");
+						mediaPlayer.enableOverlay(false);
+					}
+
+					@Override
+					public void mediaStateChanged(MediaListPlayer mediaListPlayer, int newState) {
+						// TODO Auto-generated method stub
+						super.mediaStateChanged(mediaListPlayer, newState);
+					}
+				});
+	}
+
 }
