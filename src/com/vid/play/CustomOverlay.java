@@ -7,12 +7,16 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
 
+import javax.swing.ImageIcon;
 import javax.swing.JWindow;
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
 import com.vid.commons.SupportedColors;
+import com.vid.overlay.comp.Jcomp.CustomComponent;
 import com.vid.overlay.comp.Jcomp.CustomLabel;
+import com.vid.overlay.comp.Jcomp.SpotLight;
+import com.vid.overlay.comp.Jcomp.SpotLight.Link_type;
 
 public class CustomOverlay extends JWindow {
 
@@ -42,8 +46,32 @@ public class CustomOverlay extends JWindow {
 
 		CustomLabel label = new CustomLabel(150, 200, 300, 40, new SupportedColors(Color.darkGray, 50),
 				"Hi started playing", Color.black, "Hover");
+		addCustomComponent(label);
 
-		add(label);
+		ImageIcon icon = new ImageIcon(getClass().getResource("/icons/close-circle-512.png"));
+		SpotLight lightComp_same = new SpotLight(0, 20, 100, 100, new SupportedColors(Color.red, 50), "Seek",
+				getBackground(), icon.getImage(), "", Link_type.LINK_TO_SAME_VIDEO, 50000);
+		addCustomComponent(lightComp_same);
+
+		SpotLight lightComp_diff = new SpotLight(120, 20, 100, 100, new SupportedColors(Color.red, 50), "next video",
+				getBackground(), icon.getImage(), "", Link_type.LINK_TO_OTHER_VIDEO,
+				"file:///C:/Users/hp/Desktop/elan-example1.mpg", 50000);
+		addCustomComponent(lightComp_diff);
+
+		SpotLight lightComp_web = new SpotLight(240, 20, 100, 100, new SupportedColors(Color.red, 50), "Web",
+				getBackground(), null, "", Link_type.LINK_TO_OTHER_WEB_PAGE, "http://www.google.com");
+		addCustomComponent(lightComp_web);
+
+	}
+
+	public void addCustomComponent(CustomComponent comp) {
+		add(comp);
+
+		if (comp != null && comp instanceof SpotLight) {
+			add(((SpotLight) comp).getTextArea());
+			System.out.println("added" + comp);
+		}
+		add(comp.getCloseButton());
 	}
 
 	@Override
@@ -96,14 +124,7 @@ public class CustomOverlay extends JWindow {
 		g.setFont(new Font("Sans", Font.BOLD, 32));
 		g.drawString("Heavyweight overlay test", 100, 100);
 
-		try {
-			AWTUtilities.setWindowOpaque(this, false); // Doesn't work in
-			setBackground(new Color(0, 0, 0, 0)); // This is what you
-													// do in
-			addJComponents();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		addJComponents();
 
 	}
 }
