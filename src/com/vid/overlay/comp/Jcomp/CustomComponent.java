@@ -2,14 +2,18 @@ package com.vid.overlay.comp.Jcomp;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import com.vid.commons.Fonts;
+import com.vid.execute.AppLogger;
+import com.vid.log.trace.overlay.JComponentLog;
 import com.vid.overlay.comp.master.COMPONENT_TYPE;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 import com.vid.play.CustomVideoPlayer;
@@ -20,6 +24,8 @@ public class CustomComponent extends JComponent {
 
 	private static final long serialVersionUID = 7426416230230060677L;
 
+	private static final JComponentLog logger = AppLogger.getJComponentLog();
+
 	// Shape related attributes
 	private int startX;
 	private int startY;
@@ -28,7 +34,7 @@ public class CustomComponent extends JComponent {
 
 	private Font font = Fonts.SANSERIF;
 
-	private JButton closeButton = new JButton("Close");
+	private JButton closeButton;
 
 	private Color bgColor;
 	private boolean fillSelected;
@@ -55,12 +61,25 @@ public class CustomComponent extends JComponent {
 		setHoverString(hoverString);
 
 		setBounds(startX, startY, width, height);
-		closeButton.setBounds(startX + width, startY, 10, 10);
+
+		closeButton = new JButton("Close") {
+
+			private static final long serialVersionUID = 6671595156657341960L;
+
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				ImageIcon icon = new ImageIcon(getClass().getResource("/icons/close-circle-512.png"));
+				if (icon != null) {
+					g.drawImage(icon.getImage(), 0, 0, 15, 15, null);
+				}
+			}
+		};
+		closeButton.setBounds(startX + width, startY, 15, 15);
 		closeButton.setToolTipText("hide");
 
 		// Register events for media,frame
 		registerListeners();
-
 	}
 
 	public CustomComponent() {
@@ -145,14 +164,33 @@ public class CustomComponent extends JComponent {
 	}
 
 	public void registerListeners() {
-
 		closeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				closeButton.getParent().getComponentAt(closeButton.getX() - getWidth(), closeButton.getY()).hide();
+				System.out.println(closeButton.getParent()
+						.getComponentAt(closeButton.getX() - getWidth(), closeButton.getY()).isVisible());
+				closeButton.getParent().getComponentAt(closeButton.getX() - getWidth(), closeButton.getY())
+						.setVisible(false);
+				closeButton.setVisible(false);
 			}
 		});
 
 	}
+
+	public JButton getCloseButton() {
+		return closeButton;
+	}
+
+	public void setCloseButton(JButton closeButton) {
+		this.closeButton = closeButton;
+	}
+
+	public JFrame getMainFrame() {
+		return mainFrame;
+	}
+
+	public EmbeddedMediaPlayer getMediaPlayer() {
+		return mediaPlayer;
+	}
+
 }
