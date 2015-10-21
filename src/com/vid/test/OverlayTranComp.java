@@ -1,10 +1,16 @@
 package com.vid.test;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JComponent;
 
@@ -14,8 +20,15 @@ public class OverlayTranComp extends JComponent {
 
 	private String displayString;
 
+	private URI uri;
+
 	public OverlayTranComp() {
 		setOpaque(false);
+		try {
+			uri = new URI("http://java.sun.com");
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -41,5 +54,16 @@ public class OverlayTranComp extends JComponent {
 
 	public void setDisplayString(String displayString) {
 		this.displayString = displayString;
+	}
+
+	class OpenUrlAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				Desktop.getDesktop().browse(new URI("http://www.google.com/webhp?nomo=1&hl=fr"));
+			} catch (IOException | URISyntaxException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 }
