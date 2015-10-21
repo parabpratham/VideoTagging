@@ -21,13 +21,13 @@ import javax.swing.JTabbedPane;
 
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.TraceLog;
+import com.vid.test.CustomMediaPlayerFactory;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class CustomVideoPlayer {
-	
 
 	private static final int width = 800;
 	private static final int height = 600;
@@ -82,11 +82,11 @@ public class CustomVideoPlayer {
 		 * "/.vlcj"); logger.debug("vlcArgs={}", vlcArgs);
 		 * 
 		 */
-		setMediaPlayerFactory(new MediaPlayerFactory(vlcArgs.toArray(new String[vlcArgs.size()])));
+		setMediaPlayerFactory(new CustomMediaPlayerFactory(vlcArgs.toArray(new String[vlcArgs.size()])));
 		getMediaPlayerFactory().setUserAgent("vlcj test player");
 
 		// Set full screen media player
-		setMediaPlayer(getMediaPlayerFactory().newEmbeddedMediaPlayer());
+		setMediaPlayer(CustomMediaPlayerFactory.getMediaPlayer());
 
 		// Set full overlay generator
 		setOverLayGenerator(new OverLayGenerator());
@@ -230,7 +230,8 @@ public class CustomVideoPlayer {
 	 */
 	public static void playMedia(String mediaAdd) {
 		parseInformation();
-		getMediaPlayer().playMedia(mediaAdd);
+		CustomMediaPlayerFactory.addMedia(mediaAdd);
+		CustomMediaPlayerFactory.playMedias();
 		getMediaPlayer().mute();
 	}
 
