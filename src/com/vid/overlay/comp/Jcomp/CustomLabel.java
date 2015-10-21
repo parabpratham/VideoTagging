@@ -34,7 +34,7 @@ public class CustomLabel extends CustomComponent {
 			Color displayStringColor, String hoverString) {
 
 		super(startX, startY, width, height, hoverString);
-		
+
 		setShpe(SHAPE_TYPE.RECTANGLE);
 		setBounds(startX, startY, width, height);
 		setBgColor(bgColor);
@@ -42,7 +42,9 @@ public class CustomLabel extends CustomComponent {
 		setDisplayStringColor(displayStringColor);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
 	 * 
 	 * 
@@ -57,12 +59,13 @@ public class CustomLabel extends CustomComponent {
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 
 		g2.setPaint(getBgColor());
-		g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-		g2.fillRect(0, 0, getWidth(), getHeight());
-		
+		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
+		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+
 		g2.setPaint(Color.black);
 		g2.setFont(getFont());
-		//TODO edit the starting position so that always center of the label box 
+		// TODO edit the starting position so that always center of the label
+		// box
 		g2.drawString(getDisplayString(), 10, 16);
 	}
 
