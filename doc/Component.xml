@@ -72,6 +72,7 @@
 			<Description>
 				1> Highlight a particular region
 				2> Add hyperlink
+				3> Display text only when mouse over
 			</Description>
 			<sample_image path="" />
 			<parameters>
@@ -84,6 +85,7 @@
 					</component_link_type>
 				</component_type>
 				<shape_type id="Rectangle" />
+				<has_bgimage>true</has_bgimage>
 				<onclick>
 					<action id="1"> Seek to particular location </action>
 					<action id="2"> Open another video </action>
@@ -93,22 +95,13 @@
 		</element>
 		<element id="Labels">
 			<Description>
-				1> Organize videos
+				1>  Videos lables
 			</Description>
 			<sample_image path="" />
 			<component_type id='JComponent' />
 			<parameters>
-				<shape_type id="Rectangle" />
-			</parameters>
-		</element>
-		<element id="notes">
-			<Description>
-				Clickable buttons
-			</Description>
-			<sample_image>
-			</sample_image>
-			<parameters>
-				<shape_type id="image" />
+				<shape_type id="RoundedRectangle" />
+				<has_bgimage>false</has_bgimage>
 			</parameters>
 		</element>
 		<element id="speech_bubbles">
@@ -170,14 +163,15 @@
 		</element>
 		<element id="AnnotationMarkers">
 			<Description>
-				Simple logos/icons on hover text displays/have an effect/change info
+				Simple logos/icons on hover text displays/have an
+				effect/change info
 				display
 			</Description>
 			<sample_image>
-			    
+
 			</sample_image>
 			<parameters>
-			    
+
 			</parameters>
 		</element>
 	</elements>
