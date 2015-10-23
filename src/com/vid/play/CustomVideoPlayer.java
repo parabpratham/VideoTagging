@@ -21,7 +21,6 @@ import javax.swing.JTabbedPane;
 
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.TraceLog;
-import com.vid.test.CustomMediaPlayerFactory;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;

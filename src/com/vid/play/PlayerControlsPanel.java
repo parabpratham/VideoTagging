@@ -46,7 +46,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.vid.commons.Helper;
-import com.vid.test.CustomMediaPlayerFactory;
 
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.binding.internal.libvlc_marquee_position_e;

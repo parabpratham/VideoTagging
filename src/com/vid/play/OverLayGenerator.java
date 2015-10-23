@@ -11,7 +11,6 @@ import javax.swing.SwingUtilities;
 
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.overlay.OverlayLog;
-import com.vid.test.CustomMediaPlayerFactory;
 
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
