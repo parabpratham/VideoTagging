@@ -21,7 +21,7 @@ import com.vid.play.CustomVideoPlayer;
 import com.vid.play.OverLayGenerator;
 import com.vid.test.CustomMediaPlayerFactory;
 
-public class SpotLight extends CustomComponent {
+public class SpotLight extends CustomJComponent {
 
 	private static final long serialVersionUID = -14080388742114574L;
 
@@ -58,7 +58,7 @@ public class SpotLight extends CustomComponent {
 		setLink_type(link_type);
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
-		setTextArea();
+		setTextPane();
 		textPane.setVisible(false);
 
 	}
@@ -76,7 +76,7 @@ public class SpotLight extends CustomComponent {
 		setMedia_address(media_Address);
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
-		setTextArea();
+		setTextPane();
 		textPane.setVisible(false);
 	}
 
@@ -92,7 +92,7 @@ public class SpotLight extends CustomComponent {
 		setLink_type(link_type);
 		setLink_address(link_address);
 		setComponentImage(componentImage);
-		setTextArea();
+		setTextPane();
 		try {
 			setUri(new URI(getLink_address()));
 		} catch (URISyntaxException e) {
@@ -130,7 +130,7 @@ public class SpotLight extends CustomComponent {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				System.out.println("Clicked");
+				logger.trace("Clicked");
 				try {
 					if (link_type == Link_type.LINK_TO_SAME_VIDEO) {
 						generator.enableOverlay(false);
@@ -168,10 +168,6 @@ public class SpotLight extends CustomComponent {
 		g2.fillRect(0, 0, getWidth(), getHeight());
 		if (getComponentImage() != null)
 			g2.drawImage(getComponentImage(), 0, 0, getWidth() - 1, getHeight() - 1, null);
-		g2.setPaint(Color.black);
-		g2.setFont(getFont());
-
-		// g2.drawString(getDisplayString(), 10, 16);
 	}
 
 	public enum Link_type {
@@ -250,20 +246,16 @@ public class SpotLight extends CustomComponent {
 		return component_type;
 	}
 
-	public JTextPane getTextArea() {
+	public JTextPane getTextPane() {
 		return textPane;
 	}
 
-	public void setTextArea() {
+	public void setTextPane() {
 		textPane = new JTextPane();
-		textPane.setBackground(new Color(255, 0, 0, 50));
-		//textPane.setCaretColor(getDisplayStringColor());
+		textPane.setBackground(getBgColor());
+		// textPane.setCaretColor(getDisplayStringColor());
 		textPane.setText(getDisplayString());
 		textPane.setBounds(getStartX(), getStartY() + getHeight(), getWidth(), getFont().getSize() + 5);
-	}
-
-	public void setTextArea(JTextPane textArea) {
-		this.textPane = textArea;
 	}
 
 }
