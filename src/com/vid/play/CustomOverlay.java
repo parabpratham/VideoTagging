@@ -13,8 +13,13 @@ import javax.swing.JWindow;
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
 import com.vid.commons.SupportedColors;
-import com.vid.overlay.comp.Jcomp.CustomComponent;
+import com.vid.execute.AppLogger;
+import com.vid.log.trace.overlay.OverlayLog;
+import com.vid.overlay.comp.Jcomp.CustomJComponent;
+import com.vid.overlay.comp.Jcomp.CustomEntireVideoComment;
 import com.vid.overlay.comp.Jcomp.CustomLabel;
+import com.vid.overlay.comp.Jcomp.SpeechBubble;
+import com.vid.overlay.comp.Jcomp.SpeechBubble.SpeechBubbleImageType;
 import com.vid.overlay.comp.Jcomp.SpotLight;
 import com.vid.overlay.comp.Jcomp.SpotLight.Link_type;
 
@@ -26,6 +31,8 @@ public class CustomOverlay extends JWindow {
 	private int endTime;
 
 	private int i;
+
+	private static final OverlayLog logger = AppLogger.getOverlayLog();
 
 	public CustomOverlay(Window owner, int startTime, int endTime, int i) {
 
@@ -53,25 +60,38 @@ public class CustomOverlay extends JWindow {
 				getBackground(), icon.getImage(), "", Link_type.LINK_TO_SAME_VIDEO, 50000);
 		addCustomComponent(lightComp_same);
 
-		SpotLight lightComp_diff = new SpotLight(120, 20, 100, 100, new SupportedColors(Color.red, 50), "next video",
+		SpotLight lightComp_diff = new SpotLight(120, 20, 100, 100, new SupportedColors(Color.blue, 50), "next video",
 				getBackground(), icon.getImage(), "", Link_type.LINK_TO_OTHER_VIDEO,
 				"file:///C:/Users/hp/Desktop/elan-example1.mpg", 50000);
 		addCustomComponent(lightComp_diff);
 
-		SpotLight lightComp_web = new SpotLight(240, 20, 100, 100, new SupportedColors(Color.red, 50), "Web",
+		SpotLight lightComp_web = new SpotLight(240, 20, 100, 100, new SupportedColors(Color.GREEN, 50), "Web",
 				getBackground(), null, "", Link_type.LINK_TO_OTHER_WEB_PAGE, "http://www.google.com");
 		addCustomComponent(lightComp_web);
 
+		SpeechBubble speechBubble = new SpeechBubble(360, 120, 160, 40, new SupportedColors(Color.red, 0), "Web",
+				new SupportedColors(Color.white, 0), SpeechBubbleImageType.BLACK, "");
+		addCustomComponent(speechBubble);
+
+		
+		CustomEntireVideoComment vc = new CustomEntireVideoComment(50,
+				new SupportedColors(Color.darkGray, 50), "Hi started playing", Color.black, "Hover");
+		addCustomComponent(vc);
+
 	}
 
-	public void addCustomComponent(CustomComponent comp) {
+	public void addCustomComponent(CustomJComponent comp) {
+		logger.trace("added " + comp);
 		add(comp);
-
 		if (comp != null && comp instanceof SpotLight) {
-			add(((SpotLight) comp).getTextArea());
-			System.out.println("added" + comp);
+			add(((SpotLight) comp).getTextPane());
+			logger.trace("added " + ((SpotLight) comp).getTextPane());
+		} else if (comp != null && comp instanceof SpeechBubble) {
+			add(((SpeechBubble) comp).getTextPane());
+			logger.trace("added " + ((SpeechBubble) comp).getTextPane());
 		}
 		add(comp.getCloseButton());
+		logger.trace("added " + comp.getCloseButton());
 	}
 
 	@Override

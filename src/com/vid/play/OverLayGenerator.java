@@ -147,7 +147,8 @@ public class OverLayGenerator {
 				enableOverlay(false);
 				stopVideoOerlays();
 				super.nextItem(mediaListPlayer, item, itemMrl);
-				System.out.println("start nwe generator factory");
+				// System.out.println("Start nwe generator factory");
+				overalyTrace.trace("Start nwe generator factory");
 				startNewGeneratorFactory();
 				enableOverlay(true);
 			}
