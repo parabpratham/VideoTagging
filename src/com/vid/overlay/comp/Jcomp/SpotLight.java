@@ -2,13 +2,13 @@ package com.vid.overlay.comp.Jcomp;
 
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,9 +17,9 @@ import javax.swing.JTextPane;
 
 import com.vid.overlay.comp.master.COMPONENT_TYPE;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
+import com.vid.play.CustomMediaPlayerFactory;
 import com.vid.play.CustomVideoPlayer;
 import com.vid.play.OverLayGenerator;
-import com.vid.test.CustomMediaPlayerFactory;
 
 public class SpotLight extends CustomJComponent {
 
@@ -49,7 +49,8 @@ public class SpotLight extends CustomJComponent {
 
 	// Constructor for same_video
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
-			Color displayStringColor, Image componentImage, String hoverString, Link_type link_type, int skip_time) {
+			Color displayStringColor, Font font, Image componentImage, String hoverString, Link_type link_type,
+			int skip_time) {
 
 		super(startX, startY, width, height, hoverString);
 		setBgColor(bgColor);
@@ -59,13 +60,14 @@ public class SpotLight extends CustomJComponent {
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
 		setTextPane();
+		setFont(font);
 		textPane.setVisible(false);
 
 	}
 
 	// Constructor for other_video
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
-			Color displayStringColor, Image componentImage, String hoverString, Link_type link_type,
+			Color displayStringColor, Font font, Image componentImage, String hoverString, Link_type link_type,
 			String media_Address, int skip_time) {
 
 		super(startX, startY, width, height, hoverString);
@@ -77,12 +79,13 @@ public class SpotLight extends CustomJComponent {
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
 		setTextPane();
+		setFont(font);
 		textPane.setVisible(false);
 	}
 
 	// Constructor for web_link
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
-			Color displayStringColor, Image componentImage, String hoverString, Link_type link_type,
+			Color displayStringColor, Font font, Image componentImage, String hoverString, Link_type link_type,
 			String link_address) {
 
 		super(startX, startY, width, height, hoverString);
@@ -93,6 +96,7 @@ public class SpotLight extends CustomJComponent {
 		setLink_address(link_address);
 		setComponentImage(componentImage);
 		setTextPane();
+		setFont(font);
 		try {
 			setUri(new URI(getLink_address()));
 		} catch (URISyntaxException e) {
@@ -247,6 +251,7 @@ public class SpotLight extends CustomJComponent {
 		textPane = new JTextPane();
 		textPane.setBackground(getBgColor());
 		// textPane.setCaretColor(getDisplayStringColor());
+		textPane.setFont(getFont());
 		textPane.setText(getDisplayString());
 		textPane.setBounds(getStartX(), getStartY() + getHeight(), getWidth(), getFont().getSize() + 5);
 	}

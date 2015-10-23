@@ -1,6 +1,7 @@
 package com.vid.overlay.comp.Jcomp;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -16,17 +17,8 @@ public class CustomEntireVideoComment extends CustomJComponent {
 
 	private Color displayStringColor;
 
-	/**
-	 * @param startX
-	 * @param startY
-	 * @param width
-	 * @param bgColor
-	 * @param displayString
-	 * @param displayStringColor
-	 * @param hoverString
-	 */
 	public CustomEntireVideoComment(int height, Color bgColor, String displayString, Color displayStringColor,
-			String hoverString) {
+			Font font, String hoverString) {
 
 		super(0, 0, CustomVideoPlayer.getVideosurface().getWidth() - 20, height, hoverString);
 		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
@@ -34,6 +26,7 @@ public class CustomEntireVideoComment extends CustomJComponent {
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
+		setFont(font);
 	}
 
 	@Override
@@ -47,7 +40,7 @@ public class CustomEntireVideoComment extends CustomJComponent {
 		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
 		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
 
-		g2.setPaint(Color.black);
+		g2.setPaint(getDisplayStringColor());
 		g2.setFont(getFont());
 		g2.drawString(getDisplayString(), 10, 16);
 	}

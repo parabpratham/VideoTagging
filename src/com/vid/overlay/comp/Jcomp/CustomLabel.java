@@ -1,6 +1,7 @@
 package com.vid.overlay.comp.Jcomp;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -15,23 +16,10 @@ public class CustomLabel extends CustomJComponent {
 
 	private Color displayStringColor;
 
-	public CustomLabel() {
-		super();
-		setOpaque(false);
-	}
+	private Font font;
 
-	/**
-	 * @param startX
-	 * @param startY
-	 * @param width
-	 * @param height
-	 * @param bgColor
-	 * @param displayString
-	 * @param displayStringColor
-	 * @param hoverString
-	 */
 	public CustomLabel(int startX, int startY, int width, int height, Color bgColor, String displayString,
-			Color displayStringColor, String hoverString) {
+			Color displayStringColor, Font font, String hoverString) {
 
 		super(startX, startY, width, height, hoverString);
 
@@ -40,6 +28,7 @@ public class CustomLabel extends CustomJComponent {
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
+		setFont(font);
 	}
 
 	/*
@@ -62,10 +51,9 @@ public class CustomLabel extends CustomJComponent {
 		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
 		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
 
-		g2.setPaint(Color.black);
+		g2.setPaint(getDisplayStringColor());
 		g2.setFont(getFont());
-		// TODO edit the starting position so that always center of the label
-		// box
+		// TODO edit the starting position so that always center of the labelbox
 		g2.drawString(getDisplayString(), 10, 16);
 	}
 
@@ -83,6 +71,17 @@ public class CustomLabel extends CustomJComponent {
 
 	public void setDisplayStringColor(Color displayStringColor) {
 		this.displayStringColor = displayStringColor;
+	}
+
+	public Font getFont() {
+		return font;
+	}
+
+	public void setFont(Font font) {
+		if (font != null)
+			this.font = font;
+		else
+			super.getFont();
 	}
 
 }

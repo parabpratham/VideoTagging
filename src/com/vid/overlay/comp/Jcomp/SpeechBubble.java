@@ -1,6 +1,7 @@
 package com.vid.overlay.comp.Jcomp;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -8,8 +9,6 @@ import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTextPane;
-
-import com.vid.commons.SupportedColors;
 
 public class SpeechBubble extends CustomJComponent {
 
@@ -24,17 +23,20 @@ public class SpeechBubble extends CustomJComponent {
 	private JTextPane textPane;
 
 	public SpeechBubble(int startX, int startY, int width, int height, Color bgColor, String displayString,
-			Color displayStringColor, SpeechBubbleImageType imageType, String hoverString) {
+			Color displayStringColor, Font font, SpeechBubbleImageType imageType, String hoverString) {
 
 		super(startX, startY, width, height, hoverString);
+
 		if (imageType == SpeechBubbleImageType.BLACK)
 			setComponentImage(new ImageIcon(getClass().getResource("/icons/SpeechBubble_black.png")).getImage());
 		else
 			setComponentImage(new ImageIcon(getClass().getResource("/icons/SpeechBubble_white.png")).getImage());
+
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setTextPane();
+		setFont(font);
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class SpeechBubble extends CustomJComponent {
 		g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 		g2.fillRect(0, 0, getWidth(), getHeight());
 		if (getComponentImage() != null)
-			g2.drawImage(getComponentImage(), 0, 0, getWidth() - 1, getHeight() - 1, null);
+			g2.drawImage(getComponentImage(), 0, 0, getWidth(), getHeight(), null);
 		else
 			logger.trace("No component found");
 
@@ -81,7 +83,8 @@ public class SpeechBubble extends CustomJComponent {
 	public void setTextPane() {
 		textPane = new JTextPane();
 		textPane.setBackground(getBgColor());
-		// textPane.setCaretColor(getDisplayStringColor());
+		// TODO set color of text
+		textPane.setFont(getFont());
 		textPane.setText(getDisplayString());
 		textPane.setBounds(getStartX() + 20, getStartY(), getWidth(), getHeight());
 	}
