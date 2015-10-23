@@ -23,7 +23,7 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 public final class PlayerMediaPlayerEventListener extends MediaPlayerEventAdapter {
 
 	private final static TraceLog logger = AppLogger.getTraceLog();
-	private final static JFrame frame = CustomeVideoPlayer.getMainFrame();
+	private final static JFrame frame = CustomVideoPlayer.getMainFrame();
 
 	@Override
 	public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
@@ -66,13 +66,13 @@ public final class PlayerMediaPlayerEventListener extends MediaPlayerEventAdapte
 		// logger.info("mediaMeta={}", mediaMeta);
 		frame.setTitle(mediaMeta.getTitle());
 
-		System.out.println("--------------------------------------");
-		System.out.println("Starting " + mediaMeta.getTitle());
-		System.out.println(mediaDetails);
-		System.out.println("--------------------------------------");
+		logger.trace("--------------------------------------");
+		logger.trace("Starting " + mediaMeta.getTitle());
+		logger.trace("" + mediaDetails);
+		logger.trace("--------------------------------------");
 		OverLayGenerator.NotifyObj();
-		System.out.println("Notify overlay");
-		System.out.println("--------------------------------------");
+		logger.trace("Notify overlay");
+		logger.trace("--------------------------------------");
 
 		final Dimension dimension = mediaPlayer.getVideoDimension();
 		// logger.debug("dimension={}", dimension);
@@ -184,6 +184,6 @@ public final class PlayerMediaPlayerEventListener extends MediaPlayerEventAdapte
 	}
 
 	private Canvas getVideosurface() {
-		return CustomeVideoPlayer.getVideosurface();
+		return CustomVideoPlayer.getVideosurface();
 	}
 }

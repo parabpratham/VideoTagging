@@ -9,9 +9,9 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 public class FullScreenStatergy extends DefaultFullScreenStrategy {
 
 	public FullScreenStatergy() {
-		super(CustomeVideoPlayer.getMainFrame());
-		setFullScreenStatergy(CustomeVideoPlayer.getMediaPlayer(), CustomeVideoPlayer.getControlsPanel(),
-				CustomeVideoPlayer.getMainFrame());
+		super(CustomVideoPlayer.getMainFrame());
+		setFullScreenStatergy(CustomVideoPlayer.getMediaPlayer(), CustomVideoPlayer.getControlsPanel(),
+				CustomVideoPlayer.getMainFrame());
 	}
 
 	private void setFullScreenStatergy(EmbeddedMediaPlayer mediaPlayer, PlayerControlsPanel controlsPanel,

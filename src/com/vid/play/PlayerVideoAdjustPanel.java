@@ -60,7 +60,7 @@ public class PlayerVideoAdjustPanel extends JPanel {
 	private JSlider gammaSlider;
 
 	public PlayerVideoAdjustPanel() {
-		this.mediaPlayer = CustomeVideoPlayer.getMediaPlayer();
+		this.mediaPlayer = CustomVideoPlayer.getMediaPlayer();
 		createUI();
 	}
 
