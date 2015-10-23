@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Video_anno_data>
+
+	<annotation id="1" type="com.vid.overlay.comp.Jcomp.CustomLabel">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+		<parameters set="1">
+			<startX> 150 </startX>
+			<startY> 200 </startY>
+			<width> 300 </width>
+			<height> 40 </height>
+			<bgColor> Color.darkGray </bgColor>
+			<bgOpacity> 50 </bgOpacity>
+			<displayString> Hi started playing </displayString>
+			<displayStringColor> Color.black </displayStringColor>
+			<displayStringOpacity></displayStringOpacity>
+			<font></font>
+			<hoverString> Hover </hoverString>
+		</parameters>
+	</annotation>
+
+	<annotation id="2" type="com.vid.overlay.comp.Jcomp.SpotLight">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+		<parameters set="1">
+			<startX> 0 </startX>
+			<startY> 20 </startY>
+			<width> 100 </width>
+			<height> 100 </height>
+			<bgColor> Color.red </bgColor>
+			<bgOpacity> 50 </bgOpacity>
+			<displayString>Seek</displayString>
+			<displayStringColor></displayStringColor><!-- if current is blank take 
+				background -->
+			<displayStringOpacity></displayStringOpacity>
+			<font></font>
+			<componentImage>/icons/close-circle-512.png</componentImage>
+			<hoverString></hoverString>
+			<link_type>Link_type.LINK_TO_SAME_VIDEO</link_type>
+			<skip_time> 50000 </skip_time>
+		</parameters>
+	</annotation>
+
+	<annotation id="3" type="com.vid.overlay.comp.Jcomp.SpotLight">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+		<parameters set="2">
+			<startX> 120 </startX>
+			<startY> 20 </startY>
+			<width> 100 </width>
+			<height> 100 </height>
+			<bgColor> Color.red </bgColor>
+			<bgOpacity> 50 </bgOpacity>
+			<displayString>Seek</displayString>
+			<!-- if current is blank take background -->
+			<displayStringColor></displayStringColor>
+			<displayStringOpacity></displayStringOpacity>
+			<font></font>
+			<componentImage>/icons/close-circle-512.png</componentImage>
+			<hoverString></hoverString>
+			<link_type>Link_type.LINK_TO_OTHER_VIDEO</link_type>
+			<media_Address>file:///C:/Users/hp/Desktop/elan-example1.mpg
+			</media_Address>
+			<skip_time> 50000 </skip_time>
+		</parameters>
+	</annotation>
+
+	<annotation id="4" type="com.vid.overlay.comp.Jcomp.SpotLight">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+		<parameters set="3">
+			<startX> 240 </startX>
+			<startY> 20 </startY>
+			<width> 100 </width>
+			<height> 100 </height>
+			<bgColor> Color.red </bgColor>
+			<bgOpacity> 50 </bgOpacity>
+			<displayString>Seek</displayString>
+			<!-- if current is blank take background -->
+			<displayStringColor></displayStringColor>
+			<displayStringOpacity></displayStringOpacity>
+			<font></font>
+			<componentImage>/icons/close-circle-512.png</componentImage>
+			<hoverString></hoverString>
+			<link_type>Link_type.LINK_TO_OTHER_WEB_PAGE</link_type>
+			<link_address>http://www.google.com</link_address>
+		</parameters>
+	</annotation>
+
+	<annotation id="5" type="com.vid.overlay.comp.Jcomp.SpeechBubble">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+		<parameters set="3">
+			<startX> 360 </startX>
+			<startY> 120 </startY>
+			<width> 160 </width>
+			<height> 40 </height>
+			<bgColor> Color.red </bgColor>
+			<bgOpacity> 0 </bgOpacity>
+			<displayString>Speech Bubble</displayString>
+			<!-- if current is blank take background -->
+			<displayStringColor>RED</displayStringColor>
+			<displayStringOpacity>50</displayStringOpacity>
+			<font></font>
+			<hoverString></hoverString>
+			<SpeechBubbleImageType>SpeechBubbleImageType.BLACK
+			</SpeechBubbleImageType>
+		</parameters>
+	</annotation>
+
+	<annotation id="6"
+		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+		<static_component id="1" type="Rectangle" set="1">
+			<color>Color.white</color>
+			<startX>100</startX>
+			<startY>150</startY>
+			<width>100</width>
+			<height>100</height>
+			<fillArea>true</fillArea>
+		</static_component>
+	</annotation>
+
+	<annotation id="7"
+		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+
+		<static_component id="2" type="Arrow" set="1">
+			<color>Color.BLUE</color>
+			<startX>80</startX>
+			<startY>292</startY>
+			<size>50</size>
+			<ArrowDirection>ArrowDirection.LEFT</ArrowDirection>
+		</static_component>
+	</annotation>
+
+	<annotation id="8"
+		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+
+		<static_component id="3" type="String" set="1">
+			<Color>Color.red</Color>
+			<str>Heavyweight overlay test</str>
+			<x>100</x>
+			<y>300</y>
+			<font></font>
+		</static_component>
+	</annotation>
+	<annotation id="6"
+		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
+		<starttime>1000</starttime>
+		<endtime> 25000</endtime>
+
+		<static_component id="4" type="Image" set="4">
+			<Color>Color.black</Color>
+			<Image>/icons/camera.png</Image>
+			<x>400</x>
+			<y>200</y>
+		</static_component>
+	</annotation>
+
+</overlay>
+</Video_anno_data>				
+				
