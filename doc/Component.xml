@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <Video_tags>
 	<component_types>
 		<component_type id="JComponent">
@@ -30,40 +31,72 @@
 
 	<shape_types>
 		<shape_type id="Rectangle" index="0">
-			<parameters>
-				startpoint,endpoint,fillArea,color,rectangular
-			</parameters>
+			<parameter_set>
+				<set id="1">
+					Color color, int startX, int startY, int width, int
+					height, boolean fillArea
+				</set>
+			</parameter_set>
 		</shape_type>
 		<shape_type id="line" index="1">
-			<parameters>
-				startpoint,endpoint,color
-			</parameters>
+			<parameter_set>
+				<set id="1">
+					Color color, int x1, int y1, int x2, int y2
+					<set>
+			</parameter_set>
 		</shape_type>
 		<shape_type id="oval">
-			<parameters>
-				startpoint,width,height,color,fillArea
-			</parameters>
+			<parameter_set>
+				<set id="1">
+					Color color, int x, int y, int width, int height,
+					boolean fillArea
+				</set>
+			</parameter_set>
 		</shape_type>
 		<shape_type id="polygon">
-			<parameters>
-				Points[] , numberOfPoints,color,fillArea
-			</parameters>
+			<parameter_set>
+				<set id="1">
+					Color color, int[] xPoints, int[] yPoints, int nPoints,
+					booelan fillArea
+				</set>
+				<set id="2">
+					Color color, Points points, int nPoints, booelan
+					fillArea
+				</set>
+			</parameter_set>
 		</shape_type>
 		<shape_type id="string">
-			<parameters>
-				string,posX,posY,color
-			</parameters>
+			<parameter_set>
+				<set id="1">
+					Color color, String str, int x, int y, Font font
+				</set>
+			</parameter_set>
 		</shape_type>
 		<shape_type id="image">
-			<parameters>
-				image,startpoint,width,height
-			</parameters>
+			<parameter_set>
+				<set id="1">
+					Image img, int dx1, int dy1, int dx2, int dy2, int sx1,
+					int sy1, int sx2, int sy2, Color bgcolor
+				</set>
+				<set id="2">
+					Image img, int dx1, int dy1, int dx2, int dy2, int sx1,
+					int sy1, int sx2, int sy2
+				</set>
+				<set id="3">
+					Color c, Image img, int x, int y, int width, int height
+				</set>
+				<set id="4">
+					Color c, Image img, int x, int y
+				</set>
+			</parameter_set>
 		</shape_type>
-		<shape_type id="arrow">
-			<!-- Can be drawn as polygon -->
-			<parameters>
-				image,startpoint,width,length,color,fill
-			</parameters>
+		<shape_type id="arrow"> <!-- Can be drawn as polygon -->
+			<parameter_set>
+				<set id="1">
+					Color c, int x, int y, int size, ArrowDirection
+					direction
+				</set>
+			</parameter_set>
 		</shape_type>
 	</shape_types>
 
@@ -71,108 +104,139 @@
 		<element id="SpotLight">
 			<Description>
 				1> Highlight a particular region
-				2> Add hyperlink
-				3> Display text only when mouse over
+				2> Add hyperlink Display
+				text only when mouse over
 			</Description>
 			<sample_image path="" />
-			<parameters>
-				<component_type id='JComponent'>
-					<component_link_type id="1"> link_to_same_video
-					</component_link_type>
-					<component_link_type id="2"> link to_other_video
-					</component_link_type>
-					<component_link_type id="3"> link to_other_web_page
-					</component_link_type>
-				</component_type>
-				<shape_type id="Rectangle" />
-				<has_bgimage>true</has_bgimage>
-				<onclick>
-					<action id="1"> Seek to particular location </action>
-					<action id="2"> Open another video </action>
-					<action id="3"> Diplay link/open in browser </action>
-				</onclick>
-			</parameters>
+			<component_type id='JComponent'>
+				<component_link_type id="1"> link_to_same_video
+				</component_link_type>
+				<component_link_type id="2"> link to_other_video
+				</component_link_type>
+				<component_link_type id="3"> link to_other_web_page
+				</component_link_type>
+			</component_type>
+			<shape_type id="Rectangle" />
+			<has_bgimage>true</has_bgimage>
+			<parameter_set>
+				<!-- Constructor for same_video -->
+				<set id="1">
+					int startX, int startY, int width, int height, Color
+					bgColor, String
+					displayString, Color displayStringColor, Image
+					componentImage,
+					String hoverString, Link_type link_type, int
+					skip_time, Font font
+				</set>
+				<!-- Constructor for other_video -->
+				<set id="2">
+					int startX, int startY, int width, int height, Color
+					bgColor, String
+					displayString,Color displayStringColor, Image
+					componentImage,
+					String hoverString, Link_type link_type,String
+					media_Address, int
+					skip_time, Font font
+				</set>
+				<!-- Constructor for web_link -->
+				<set id="3">
+					int startX, int startY, int width, int height, Color bgColor,
+					String displayString,
+					Color displayStringColor, Image
+					componentImage, String hoverString,
+					Link_type link_type,
+					String
+					link_address, Font font
+					<set>
+			</parameter_set>
+			<onclick>
+				<action id="1"> Seek to particular location </action>
+				<action id="2"> Open another video </action>
+				<action id="3"> Diplay link/open in browser </action>
+			</onclick>
 		</element>
-		<element id="Labels">
+
+		<element id="CustomLabel">
 			<Description>
-				1>  Videos lables
+				1> Videos lables
 			</Description>
 			<sample_image path="" />
 			<component_type id='JComponent' />
-			<parameters>
-				<shape_type id="RoundedRectangle" />
-				<has_bgimage>false</has_bgimage>
-			</parameters>
+			<shape_type id="RoundedRectangle" />
+			<has_bgimage>false</has_bgimage>
+			<parameter_set>
+				<set id="1">
+					int startX, int startY, int width, int height, Color
+					bgColor, String
+					displayString,Color displayStringColor, String
+					hoverString, Font font
+				</set>
+			</parameter_set>
 		</element>
+
 		<element id="speech_bubbles">
 			<Description>
 				Announcements / links to real videos
 			</Description>
 			<sample_image path="" />
-			<component_type id='JComponent' />
-			<parameters>
-				<component_type id='JComponent'>
-					<component_link_type id="1"> link_to_same_video
-					</component_link_type>
-					<component_link_type id="2"> link to_other_video
-					</component_link_type>
-					<component_link_type id="3"> link to_other_web_page
-					</component_link_type>
-				</component_type>
+			<component_type id='JComponent'>
+				<component_link_type id="1"> link_to_same_video
+				</component_link_type>
+				<component_link_type id="2"> link to_other_video
+				</component_link_type>
+				<component_link_type id="3"> link to_other_web_page
+				</component_link_type>
 				<shape_type id="Rectangle" />
+				<parameter_set>
+					<set id="1">
+						int startX, int startY, int width, int height, Color
+						bgColor, String displayString, Color displayStringColor,
+						SpeechBubbleImageType imageType, String hoverString, Font font
+					</set>
+				</parameter_set>
 				<onclick>
 					<action id="1"> Seek to particular location </action>
 					<action id="2"> Open another video </action>
 					<action id="3"> Diplay link/open in browser </action>
 				</onclick>
-			</parameters>
-		</element>
-		<element id="comments">
-			<Description>
-				Comments for a particular part of videos
-			</Description>
-			<sample_image path="" />
-			<component_type id='JComponent' />
-			<parameters>
-				<shape_type id="Rectangle">
-					Rounded Rectangle
-				</shape_type>
-			</parameters>
 		</element>
 		<element id="EntireVideoComment">
 			<Description>
-				Comments for a entire length of video
-				// Not devided yet
-				maybe to minimize option provided
+				1> Comments for a entire length of video at top of the
+				video
+				2> maybe to minimize option provided
 			</Description>
 			<sample_image path="" />
 			<component_type id='EntireVideoComment' />
-			<parameters>
-				<shape_type id="Rectangle">
-					Rounded Rectangle
-				</shape_type>
-			</parameters>
+			<shape_type id="RoundedRectangle " />
+			<parameter_set>
+				<set id="1">
+					int height, Color bgColor, String displayString, Color
+					displayStringColor, String hoverString, Font font
+				</set>
+			</parameter_set>
 		</element>
-		<element id="image">
+
+		<element id="CustomImage">
 			<Description>
 				Overlay an image
 			</Description>
-			<parameters>
-				<shape_type id="image" />
-			</parameters>
+			<shape_type id="image" />
+			<parameter_set>
+
+			</parameter_set>
 		</element>
 		<element id="AnnotationMarkers">
 			<Description>
 				Simple logos/icons on hover text displays/have an
-				effect/change info
-				display
+				effect/change info display
 			</Description>
 			<sample_image>
 
 			</sample_image>
-			<parameters>
+			<parameter_set>
 
-			</parameters>
+			</parameter_set>
 		</element>
 	</elements>
 </Video_tags>
