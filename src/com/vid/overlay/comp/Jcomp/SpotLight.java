@@ -102,25 +102,6 @@ public class SpotLight extends CustomJComponent {
 	}
 
 	@Override
-	public synchronized void addMouseListener(MouseListener l) {
-		l = new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				super.mouseEntered(e);
-				textPane.setVisible(true);
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				super.mouseExited(e);
-				textPane.setVisible(false);
-			}
-		};
-
-		super.addMouseListener(l);
-	}
-
-	@Override
 	public void registerListeners() {
 		super.registerListeners();
 		addMouseListener(new MouseAdapter() {
@@ -152,6 +133,18 @@ public class SpotLight extends CustomJComponent {
 				} catch (InterruptedException | IOException e1) {
 					e1.printStackTrace();
 				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				super.mouseEntered(e);
+				textPane.setVisible(true);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				super.mouseExited(e);
+				textPane.setVisible(false);
 			}
 		});
 	}
