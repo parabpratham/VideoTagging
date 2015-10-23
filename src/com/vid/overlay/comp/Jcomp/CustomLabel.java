@@ -7,7 +7,7 @@ import java.awt.RenderingHints;
 
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 
-public class CustomLabel extends CustomComponent {
+public class CustomLabel extends CustomJComponent {
 
 	private static final long serialVersionUID = -2906663949003876551L;
 
@@ -35,7 +35,7 @@ public class CustomLabel extends CustomComponent {
 
 		super(startX, startY, width, height, hoverString);
 
-		setShpe(SHAPE_TYPE.RECTANGLE);
+		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
 		setBounds(startX, startY, width, height);
 		setBgColor(bgColor);
 		setDisplayString(displayString);
