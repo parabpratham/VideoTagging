@@ -2,110 +2,116 @@
 
 <Video_anno_data>
 
+	<video_details>
+		<file_name>J:/Movies/Hollywood/we are legion the story of the
+			hacktivists 2012 dvdrip x264.avi
+		</file_name>
+		<file_hash>2731662cde67fc325c59719622468703dad261ec</file_hash>
+	</video_details>
+
 	<annotation id="1" type="com.vid.overlay.comp.Jcomp.CustomLabel">
-		<starttime>1000</starttime>
-		<endtime> 25000</endtime>
+		<starttime>1200</starttime>
+		<endtime> 250000</endtime>
+		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="1">
-			<startX> 150 </startX>
-			<startY> 200 </startY>
-			<width> 300 </width>
-			<height> 40 </height>
-			<bgColor> Color.darkGray </bgColor>
-			<bgOpacity> 50 </bgOpacity>
-			<displayString> Hi started playing </displayString>
-			<displayStringColor> Color.black </displayStringColor>
-			<displayStringOpacity></displayStringOpacity>
-			<font></font>
-			<hoverString> Hover </hoverString>
+			<StartX> 150 </StartX>
+			<StartY> 200 </StartY>
+			<Width> 300 </Width>
+			<Height> 40 </Height>
+			<BgColor> darkGray,50 </BgColor>
+			<DisplayString> Hi started playing </DisplayString>
+			<DisplayStringColor> black,0 </DisplayStringColor>
+			<Font></Font>
+			<HoverString> Hover </HoverString>
 		</parameters>
 	</annotation>
 
 	<annotation id="2" type="com.vid.overlay.comp.Jcomp.SpotLight">
 		<starttime>1000</starttime>
-		<endtime> 25000</endtime>
+		<endtime> 45000</endtime>
+		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="1">
-			<startX> 0 </startX>
-			<startY> 20 </startY>
-			<width> 100 </width>
-			<height> 100 </height>
-			<bgColor> Color.red </bgColor>
-			<bgOpacity> 50 </bgOpacity>
-			<displayString>Seek</displayString>
-			<displayStringColor></displayStringColor><!-- if current is blank take 
+			<StartX> 0 </StartX>
+			<StartY> 20 </StartY>
+			<Width> 100 </Width>
+			<Height> 100 </Height>
+			<BgColor> red,50 </BgColor>
+			<DisplayString>Seek</DisplayString>
+			<DisplayStringColor></DisplayStringColor><!-- if current is blank take 
 				background -->
-			<displayStringOpacity></displayStringOpacity>
-			<font></font>
-			<componentImage>/icons/close-circle-512.png</componentImage>
-			<hoverString></hoverString>
-			<link_type>Link_type.LINK_TO_SAME_VIDEO</link_type>
-			<skip_time> 50000 </skip_time>
+			<Font></Font>
+			<ComponentImage>/icons/close-circle-512.png</ComponentImage>
+			<HoverString></HoverString>
+			<Link_type>LINK_TO_SAME_VIDEO</Link_type>
+			<Link_address></Link_address>
+			<Md_address></Md_address>
+			<Skip_time> 50000 </Skip_time>
 		</parameters>
 	</annotation>
 
 	<annotation id="3" type="com.vid.overlay.comp.Jcomp.SpotLight">
-		<starttime>1000</starttime>
-		<endtime> 25000</endtime>
+		<starttime>1500</starttime>
+		<endtime> 15000</endtime>
+		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="2">
-			<startX> 120 </startX>
-			<startY> 20 </startY>
-			<width> 100 </width>
-			<height> 100 </height>
-			<bgColor> Color.red </bgColor>
-			<bgOpacity> 50 </bgOpacity>
-			<displayString>Seek</displayString>
+			<StartX> 120 </StartX>
+			<StartY> 20 </StartY>
+			<Width> 100 </Width>
+			<Height> 100 </Height>
+			<BgColor> red,50 </BgColor>
+			<DisplayString>Seek</DisplayString>
 			<!-- if current is blank take background -->
-			<displayStringColor></displayStringColor>
-			<displayStringOpacity></displayStringOpacity>
-			<font></font>
-			<componentImage>/icons/close-circle-512.png</componentImage>
-			<hoverString></hoverString>
-			<link_type>Link_type.LINK_TO_OTHER_VIDEO</link_type>
-			<media_Address>file:///C:/Users/hp/Desktop/elan-example1.mpg
-			</media_Address>
-			<skip_time> 50000 </skip_time>
+			<DisplayStringColor></DisplayStringColor>
+			<Font></Font>
+			<ComponentImage>/icons/close-circle-512.png</ComponentImage>
+			<HoverString></HoverString>
+			<Link_type>LINK_TO_OTHER_VIDEO</Link_type>
+			<Link_address></Link_address>
+			<Md_address>file:///C:/Users/hp/Desktop/elan-example1.mpg
+			</Md_address>
+			<Skip_time> 50000 </Skip_time>
 		</parameters>
 	</annotation>
 
 	<annotation id="4" type="com.vid.overlay.comp.Jcomp.SpotLight">
-		<starttime>1000</starttime>
-		<endtime> 25000</endtime>
+		<starttime>2500</starttime>
+		<endtime> 33000</endtime>
+		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="3">
-			<startX> 240 </startX>
-			<startY> 20 </startY>
-			<width> 100 </width>
-			<height> 100 </height>
-			<bgColor> Color.red </bgColor>
-			<bgOpacity> 50 </bgOpacity>
-			<displayString>Seek</displayString>
+			<StartX> 240 </StartX>
+			<StartY> 20 </StartY>
+			<Width> 100 </Width>
+			<Height> 100 </Height>
+			<BgColor> red,50 </BgColor>
+			<DisplayString>Seek</DisplayString>
 			<!-- if current is blank take background -->
-			<displayStringColor></displayStringColor>
-			<displayStringOpacity></displayStringOpacity>
-			<font></font>
-			<componentImage>/icons/close-circle-512.png</componentImage>
-			<hoverString></hoverString>
-			<link_type>Link_type.LINK_TO_OTHER_WEB_PAGE</link_type>
-			<link_address>http://www.google.com</link_address>
+			<DisplayStringColor> pink </DisplayStringColor>
+			<Font></Font>
+			<ComponentImage>/icons/close-circle-512.png</ComponentImage>
+			<HoverString></HoverString>
+			<Link_type>LINK_TO_OTHER_WEB_PAGE</Link_type>
+			<Link_address>http://www.google.com</Link_address>
+			<Md_address></Md_address>
+			<Skip_time></Skip_time>
 		</parameters>
 	</annotation>
 
 	<annotation id="5" type="com.vid.overlay.comp.Jcomp.SpeechBubble">
-		<starttime>1000</starttime>
-		<endtime> 25000</endtime>
+		<starttime>3000</starttime>
+		<endtime> 250000</endtime>
+		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="3">
-			<startX> 360 </startX>
-			<startY> 120 </startY>
-			<width> 160 </width>
-			<height> 40 </height>
-			<bgColor> Color.red </bgColor>
-			<bgOpacity> 0 </bgOpacity>
-			<displayString>Speech Bubble</displayString>
+			<StartX> 360 </StartX>
+			<StartY> 120 </StartY>
+			<Width> 160 </Width>
+			<Height> 40 </Height>
+			<BgColor> red,50 </BgColor>
+			<DisplayString>Speech Bubble</DisplayString>
 			<!-- if current is blank take background -->
-			<displayStringColor>RED</displayStringColor>
-			<displayStringOpacity>50</displayStringOpacity>
-			<font></font>
-			<hoverString></hoverString>
-			<SpeechBubbleImageType>SpeechBubbleImageType.BLACK
-			</SpeechBubbleImageType>
+			<DisplayStringColor> black,50 </DisplayStringColor>
+			<Font></Font>
+			<HoverString></HoverString>
+			<ImageType>BLACK</ImageType>
 		</parameters>
 	</annotation>
 
@@ -113,8 +119,9 @@
 		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
 		<starttime>1000</starttime>
 		<endtime> 25000</endtime>
+		<comp_type>SHAPE</comp_type>
 		<static_component id="1" type="Rectangle" set="1">
-			<color>Color.white</color>
+			<color>white</color>
 			<startX>100</startX>
 			<startY>150</startY>
 			<width>100</width>
@@ -126,10 +133,10 @@
 	<annotation id="7"
 		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
 		<starttime>1000</starttime>
-		<endtime> 25000</endtime>
+		<endtime> 2000</endtime>
 
 		<static_component id="2" type="Arrow" set="1">
-			<color>Color.BLUE</color>
+			<color>BLUE</color>
 			<startX>80</startX>
 			<startY>292</startY>
 			<size>50</size>
@@ -139,11 +146,11 @@
 
 	<annotation id="8"
 		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
-		<starttime>1000</starttime>
-		<endtime> 25000</endtime>
-
+		<starttime>1500</starttime>
+		<endtime> 20000</endtime>
+		<comp_type>SHAPE</comp_type>
 		<static_component id="3" type="String" set="1">
-			<Color>Color.red</Color>
+			<Color>red</Color>
 			<str>Heavyweight overlay test</str>
 			<x>100</x>
 			<y>300</y>
@@ -152,17 +159,14 @@
 	</annotation>
 	<annotation id="6"
 		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
-		<starttime>1000</starttime>
+		<starttime>10000</starttime>
 		<endtime> 25000</endtime>
-
+		<comp_type>SHAPE</comp_type>
 		<static_component id="4" type="Image" set="4">
-			<Color>Color.black</Color>
+			<Color>black</Color>
 			<Image>/icons/camera.png</Image>
 			<x>400</x>
 			<y>200</y>
 		</static_component>
 	</annotation>
-
-</overlay>
-</Video_anno_data>				
-				
+</Video_anno_data>    
