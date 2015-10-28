@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import com.vid.overlay.comp.master.JComponentType;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 
 public class CustomLabel extends CustomJComponent {
@@ -18,17 +19,26 @@ public class CustomLabel extends CustomJComponent {
 
 	private Font font;
 
+	public CustomLabel() {
+		super();
+	}
+
 	public CustomLabel(int startX, int startY, int width, int height, Color bgColor, String displayString,
 			Color displayStringColor, Font font, String hoverString) {
 
 		super(startX, startY, width, height, hoverString);
-
-		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
-		setBounds(startX, startY, width, height);
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setFont(font);
+		defineParameter();
+	}
+
+	@Override
+	protected void defineParameter() {
+		super.defineParameter();
+		setjComponentType(JComponentType.CUSTOM_LABEL);
+		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
 	}
 
 	/*

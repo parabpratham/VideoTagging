@@ -13,15 +13,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.swing.JTextPane;
-
-import com.vid.overlay.comp.master.COMPONENT_TYPE;
+import com.sun.xml.internal.ws.client.sei.ValueSetter;
+import com.vid.overlay.comp.Jcomp.SpeechBubble.SpeechBubbleImageType;
+import com.vid.overlay.comp.master.JComponentType;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 import com.vid.play.CustomMediaPlayerFactory;
 import com.vid.play.CustomVideoPlayer;
 import com.vid.play.OverLayGenerator;
 
-public class SpotLight extends CustomJComponent {
+public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 
 	private static final long serialVersionUID = -14080388742114574L;
 
@@ -37,50 +37,65 @@ public class SpotLight extends CustomJComponent {
 
 	private static final SHAPE_TYPE shape_TYPE = SHAPE_TYPE.RECTANGLE;
 
-	private static final COMPONENT_TYPE component_type = COMPONENT_TYPE.JCONPONENT;
-
-	private long skip_time;
+	private Long skip_time;
 
 	private String link_address;
 
-	private String media_address;
+	private String md_address;
 
-	private JTextPane textPane;
+	private static final JComponentType type = JComponentType.SPOT_LIGHT;
+
+	public SpotLight() {
+		super();
+	}
 
 	// Constructor for same_video
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
 			Color displayStringColor, Font font, Image componentImage, String hoverString, Link_type link_type,
-			int skip_time) {
+			Long skip_time) {
 
 		super(startX, startY, width, height, hoverString);
+
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setLink_type(link_type);
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
-		setTextPane();
 		setFont(font);
+		defineParameter();
+	}
+
+	@Override
+	protected void defineParameter() {
+		super.defineParameter();
+		setjComponentType(JComponentType.SPOT_LIGHT);
+		setChildTextPane();
 		textPane.setVisible(false);
 
+		if (getLink_type() == Link_type.LINK_TO_OTHER_WEB_PAGE)
+			try {
+				setUri(new URI(getLink_address()));
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
 	}
 
 	// Constructor for other_video
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
 			Color displayStringColor, Font font, Image componentImage, String hoverString, Link_type link_type,
-			String media_Address, int skip_time) {
+			String media_Address, Long skip_time) {
 
 		super(startX, startY, width, height, hoverString);
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setLink_type(link_type);
-		setMedia_address(media_Address);
+		setMd_address(media_Address);
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
-		setTextPane();
 		setFont(font);
-		textPane.setVisible(false);
+		defineParameter();
 	}
 
 	// Constructor for web_link
@@ -95,14 +110,9 @@ public class SpotLight extends CustomJComponent {
 		setLink_type(link_type);
 		setLink_address(link_address);
 		setComponentImage(componentImage);
-		setTextPane();
 		setFont(font);
-		try {
-			setUri(new URI(getLink_address()));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		textPane.setVisible(false);
+
+		defineParameter();
 	}
 
 	@Override
@@ -124,7 +134,7 @@ public class SpotLight extends CustomJComponent {
 						getMediaPlayer().skip(skip_time);
 						generator.enableOverlay(true);
 					} else if (link_type == Link_type.LINK_TO_OTHER_VIDEO) {
-						CustomMediaPlayerFactory.addMedia(getMedia_address());
+						CustomMediaPlayerFactory.addMedia(getMd_address());
 						CustomMediaPlayerFactory.stopMedia();
 						Thread.sleep(1000);
 						CustomMediaPlayerFactory.playMedias(CustomMediaPlayerFactory.getMediaList().size() - 1);
@@ -169,6 +179,15 @@ public class SpotLight extends CustomJComponent {
 
 	public enum Link_type {
 		LINK_TO_SAME_VIDEO, LINK_TO_OTHER_VIDEO, LINK_TO_OTHER_WEB_PAGE;
+
+		public static Link_type getFromName(String name) {
+			Link_type[] values = values();
+			for (Link_type link_type : values) {
+				if (link_type.name().equalsIgnoreCase(name))
+					return link_type;
+			}
+			return null;
+		}
 	}
 
 	public Link_type getLink_type() {
@@ -207,7 +226,7 @@ public class SpotLight extends CustomJComponent {
 		return skip_time;
 	}
 
-	public void setSkip_time(long seek_time) {
+	public void setSkip_time(Long seek_time) {
 		this.skip_time = seek_time;
 	}
 
@@ -227,33 +246,25 @@ public class SpotLight extends CustomJComponent {
 		this.uri = uri;
 	}
 
-	public String getMedia_address() {
-		return media_address;
-	}
-
-	public void setMedia_address(String media_address) {
-		this.media_address = media_address;
-	}
-
 	public static SHAPE_TYPE getShapeType() {
 		return shape_TYPE;
 	}
 
-	public static COMPONENT_TYPE getComponentType() {
-		return component_type;
+	public void setChildTextPane() {
+		super.setTextPane();
+		setTextPaneBounds(getStartX(), getStartY() + getHeight(), getWidth(), getFont().getSize() + 5);
 	}
 
-	public JTextPane getTextPane() {
-		return textPane;
+	public static JComponentType getType() {
+		return type;
 	}
 
-	public void setTextPane() {
-		textPane = new JTextPane();
-		textPane.setBackground(getBgColor());
-		// textPane.setCaretColor(getDisplayStringColor());
-		textPane.setFont(getFont());
-		textPane.setText(getDisplayString());
-		textPane.setBounds(getStartX(), getStartY() + getHeight(), getWidth(), getFont().getSize() + 5);
+	public String getMd_address() {
+		return md_address;
+	}
+
+	public void setMd_address(String md_address) {
+		this.md_address = md_address;
 	}
 
 }

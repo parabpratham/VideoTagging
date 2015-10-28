@@ -8,9 +8,10 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 
 import javax.swing.ImageIcon;
-import javax.swing.JTextPane;
 
-public class SpeechBubble extends CustomJComponent {
+import com.vid.overlay.comp.master.JComponentType;
+
+public class SpeechBubble extends CustomJComponent implements JCompoWithTextPane {
 
 	private static final long serialVersionUID = -1057656871481790644L;
 
@@ -20,23 +21,36 @@ public class SpeechBubble extends CustomJComponent {
 
 	private Image componentImage;
 
-	private JTextPane textPane;
+	private SpeechBubbleImageType imageType;
+
+	public SpeechBubble() {
+		super();
+	}
 
 	public SpeechBubble(int startX, int startY, int width, int height, Color bgColor, String displayString,
 			Color displayStringColor, Font font, SpeechBubbleImageType imageType, String hoverString) {
 
 		super(startX, startY, width, height, hoverString);
+		setImageType(imageType);
+		setBgColor(bgColor);
+		setDisplayString(displayString);
+		setDisplayStringColor(displayStringColor);
+		setFont(font);
+		defineParameter();
+	}
 
-		if (imageType == SpeechBubbleImageType.BLACK)
+	@Override
+	protected void defineParameter() {
+		super.defineParameter();
+		setjComponentType(JComponentType.SPEECH_BUBLE);
+
+		if (getImageType() == SpeechBubbleImageType.BLACK)
 			setComponentImage(new ImageIcon(getClass().getResource("/icons/SpeechBubble_black.png")).getImage());
 		else
 			setComponentImage(new ImageIcon(getClass().getResource("/icons/SpeechBubble_white.png")).getImage());
 
-		setBgColor(bgColor);
-		setDisplayString(displayString);
-		setDisplayStringColor(displayStringColor);
-		setTextPane();
-		setFont(font);
+		setChildTextPane();
+
 	}
 
 	@Override
@@ -76,25 +90,34 @@ public class SpeechBubble extends CustomJComponent {
 		return componentImage;
 	}
 
-	public JTextPane getTextPane() {
-		return textPane;
-	}
-
-	public void setTextPane() {
-		textPane = new JTextPane();
-		textPane.setBackground(getBgColor());
-		// TODO set color of text
-		textPane.setFont(getFont());
-		textPane.setText(getDisplayString());
-		textPane.setBounds(getStartX() + 20, getStartY(), getWidth(), getHeight());
-	}
-
 	public void setComponentImage(Image componentImage) {
 		this.componentImage = componentImage;
 	}
 
 	public enum SpeechBubbleImageType {
 		BLACK, WHITE;
+
+		public static SpeechBubbleImageType getFromName(String name) {
+			SpeechBubbleImageType[] values = values();
+			for (SpeechBubbleImageType speechBubbleImageType : values) {
+				if (speechBubbleImageType.name().equalsIgnoreCase(name))
+					return speechBubbleImageType;
+			}
+			return null;
+		}
+	}
+
+	public void setChildTextPane() {
+		super.setTextPane();
+		setTextPaneBounds(getStartX() + 20, getStartY(), getWidth() - 20, getHeight());
+	}
+
+	public SpeechBubbleImageType getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(SpeechBubbleImageType imageType) {
+		this.imageType = imageType;
 	}
 
 }

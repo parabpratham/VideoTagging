@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
+import com.vid.overlay.comp.master.JComponentType;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 import com.vid.play.CustomVideoPlayer;
 
@@ -17,20 +18,32 @@ public class CustomEntireVideoComment extends CustomJComponent {
 
 	private Color displayStringColor;
 
+	public CustomEntireVideoComment() {
+		super();
+	}
+
 	public CustomEntireVideoComment(int height, Color bgColor, String displayString, Color displayStringColor,
 			Font font, String hoverString) {
 
 		super(0, 0, CustomVideoPlayer.getVideosurface().getWidth() - 20, height, hoverString);
-		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
-		setBounds(0, 0, getWidth(), height);
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setFont(font);
+		defineParameter();
+	}
+
+	@Override
+	protected void defineParameter() {
+		super.defineParameter();
+		setWidth(CustomVideoPlayer.getVideosurface().getWidth() - 20);
+		setjComponentType(JComponentType.ENTIRE_VIDEO_COMMENT);
+		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
+
 		Graphics2D g2 = (Graphics2D) g;
 
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

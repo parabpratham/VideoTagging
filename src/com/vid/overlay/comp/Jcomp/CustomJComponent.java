@@ -10,12 +10,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JTextPane;
 
 import com.vid.commons.Fonts;
 import com.vid.commons.SupportedColors;
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.overlay.JComponentLog;
 import com.vid.overlay.comp.master.COMPONENT_TYPE;
+import com.vid.overlay.comp.master.JComponentType;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 import com.vid.play.CustomVideoPlayer;
 
@@ -28,12 +30,12 @@ public class CustomJComponent extends JComponent {
 	protected static final JComponentLog logger = AppLogger.getJComponentLog();
 
 	// Shape related attributes
-	private int startX;
-	private int startY;
-	private int width;
-	private int height;
+	private Integer startX;
+	private Integer startY;
+	private Integer width;
+	private Integer height;
 
-	private Font font = Fonts.SANSERIF;
+	private Font font = Fonts.getAppFont();
 
 	private JButton closeButton;
 
@@ -47,13 +49,19 @@ public class CustomJComponent extends JComponent {
 	private final JFrame mainFrame = CustomVideoPlayer.getMainFrame();
 	private final EmbeddedMediaPlayer mediaPlayer = CustomVideoPlayer.getMediaPlayer();
 
-	private static final COMPONENT_TYPE component_TYPE = COMPONENT_TYPE.JCONPONENT;
+	private final COMPONENT_TYPE component_TYPE = COMPONENT_TYPE.JCOMPONENT;
 
-	public CustomJComponent(int startX, int startY, int width, int height, String hoverString) {
+	private JComponentType jComponentType;
+
+	protected JTextPane textPane;
+
+	public CustomJComponent() {
+		super();
+	}
+
+	public CustomJComponent(Integer startX, Integer startY, Integer width, Integer height, String hoverString) {
 
 		super();
-
-		setOpaque(false);
 
 		setStartX(startX);
 		setStartY(startY);
@@ -61,10 +69,13 @@ public class CustomJComponent extends JComponent {
 		setHeight(height);
 		setHoverString(hoverString);
 
-		setBounds(startX, startY, width, height);
+		defineParameter();
+	}
 
+	protected void defineParameter() {
+		setOpaque(false);
+		setBounds(getStartX(), getStartY(), getWidth(), getHeight());
 		closeButton = new JButton("Close") {
-
 			private static final long serialVersionUID = 6671595156657341960L;
 
 			@Override
@@ -84,11 +95,6 @@ public class CustomJComponent extends JComponent {
 		registerListeners();
 	}
 
-	public CustomJComponent() {
-
-		super();
-	}
-
 	public Color getBgColor() {
 		return bgColor;
 	}
@@ -100,19 +106,19 @@ public class CustomJComponent extends JComponent {
 			this.bgColor = bgColor;
 	}
 
-	public int getStartX() {
+	public Integer getStartX() {
 		return startX;
 	}
 
-	public void setStartX(int startX) {
+	public void setStartX(Integer startX) {
 		this.startX = startX;
 	}
 
-	public int getStartY() {
+	public Integer getStartY() {
 		return startY;
 	}
 
-	public void setStartY(int startY) {
+	public void setStartY(Integer startY) {
 		this.startY = startY;
 	}
 
@@ -120,7 +126,7 @@ public class CustomJComponent extends JComponent {
 		return width;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(Integer width) {
 		this.width = width;
 	}
 
@@ -128,7 +134,7 @@ public class CustomJComponent extends JComponent {
 		return height;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 
@@ -140,11 +146,11 @@ public class CustomJComponent extends JComponent {
 		this.shpe = shpe;
 	}
 
-	public static COMPONENT_TYPE getComponentType() {
+	public COMPONENT_TYPE getComponentType() {
 		return component_TYPE;
 	}
 
-	public boolean isFillSelected() {
+	public boolean getFillSelected() {
 		return fillSelected;
 	}
 
@@ -175,6 +181,8 @@ public class CustomJComponent extends JComponent {
 				closeButton.getParent().getComponentAt(closeButton.getX() - getWidth() + 10, closeButton.getY() + 10)
 						.setVisible(false);
 				closeButton.setVisible(false);
+				if (textPane != null)
+					textPane.setVisible(false);
 			}
 		});
 
@@ -194,6 +202,38 @@ public class CustomJComponent extends JComponent {
 
 	public EmbeddedMediaPlayer getMediaPlayer() {
 		return mediaPlayer;
+	}
+
+	public JTextPane getTextPane() {
+		return textPane;
+	}
+
+	public void setTextPane() {
+		textPane = new JTextPane();
+		textPane.setBackground(getBgColor());
+		// TODO set color of text
+		textPane.setFont(getFont());
+		textPane.setText(getDisplayString());
+	}
+
+	public String getDisplayString() {
+		return "";
+	}
+
+	public void setTextPaneBounds(Integer x, Integer y, Integer width, Integer height) {
+		getTextPane().setBounds(x, y, width, height);
+	}
+
+	public JComponentType getjComponentType() {
+		return jComponentType;
+	}
+
+	public void setjComponentType(JComponentType jComponentType) {
+		this.jComponentType = jComponentType;
+	}
+
+	public COMPONENT_TYPE getComponent_TYPE() {
+		return component_TYPE;
 	}
 
 }
