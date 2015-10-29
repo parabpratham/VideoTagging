@@ -11,13 +11,12 @@ import com.vid.log.trace.overlay.OverlayLog;
 import com.vid.overlay.comp.Jcomp.CustomJComponent;
 import com.vid.overlay.comp.Scomp.CustomStaticComponent;
 import com.vid.overlay.comp.master.COMPONENT_TYPE;
-import com.vid.test.JDomParserTest;
-import com.vid.test.JDomParserTest.Annotation;
-import com.vid.test.JDomParserTest.AnnotationKey;
+import com.vid.play.overlay.XMLJDomParser.Annotation;
+import com.vid.play.overlay.XMLJDomParser.AnnotationKey;
 
 public class OverlayFactory implements Runnable {
 
-	private JDomParserTest test;
+	private XMLJDomParser test;
 
 	private Map<AnnotationKey, Annotation> annotationMap;
 
@@ -30,7 +29,7 @@ public class OverlayFactory implements Runnable {
 	private static final OverlayLog logger = AppLogger.getOverlayLog();
 
 	public OverlayFactory() {
-		test = new JDomParserTest();
+		test = new XMLJDomParser();
 		keyArrayList = new ArrayList<AnnotationKey>();
 		eventTimeList = new ArrayList<Integer>();
 		overlays = OverLayGenerator.getOverlays();
