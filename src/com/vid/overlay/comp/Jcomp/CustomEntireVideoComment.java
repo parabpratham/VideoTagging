@@ -30,28 +30,28 @@ public class CustomEntireVideoComment extends CustomJComponent {
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setFont(font);
-		defineParameter();
 	}
 
 	@Override
 	protected void defineParameter() {
+		setWidth(CustomVideoPlayer.getVideosurface().getWidth() - 50);
 		super.defineParameter();
-		setWidth(CustomVideoPlayer.getVideosurface().getWidth() - 20);
 		setjComponentType(JComponentType.ENTIRE_VIDEO_COMMENT);
 		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
+	public void paint(Graphics g) {
+		super.paint(g);
 
 		Graphics2D g2 = (Graphics2D) g;
 
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-
+		setBounds(getX(), getY(), getWidth(), getHeight());
 		g2.setPaint(getBgColor());
-		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
-		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+		g2.drawRoundRect(0, getY(), getWidth() - 1, getHeight() - 1, 10, 10);
+		g2.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 10, 10);
 
 		g2.setPaint(getDisplayStringColor());
 		g2.setFont(getFont());

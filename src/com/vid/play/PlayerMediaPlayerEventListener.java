@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.TraceLog;
+import com.vid.play.overlay.OverLayGenerator;
 
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaDetails;

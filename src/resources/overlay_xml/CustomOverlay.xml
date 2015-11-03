@@ -10,29 +10,28 @@
 	</video_details>
 
 	<annotation id="1" type="com.vid.overlay.comp.Jcomp.CustomLabel">
-		<starttime>1200</starttime>
+		<starttime>1000</starttime>
 		<endtime> 250000</endtime>
 		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="1">
 			<StartX> 150 </StartX>
-			<StartY> 200 </StartY>
+			<StartY> 250 </StartY>
 			<Width> 300 </Width>
 			<Height> 40 </Height>
 			<BgColor> darkGray,50 </BgColor>
-			<DisplayString> Hi started playing </DisplayString>
-			<DisplayStringColor> black,0 </DisplayStringColor>
+			<DisplayString> This is custom label </DisplayString>
+			<DisplayStringColor> red,50 </DisplayStringColor>
 			<Font></Font>
 			<HoverString> Hover </HoverString>
 		</parameters>
 	</annotation>
-
 	<annotation id="2" type="com.vid.overlay.comp.Jcomp.SpotLight">
-		<starttime>1000</starttime>
-		<endtime> 45000</endtime>
+		<starttime>16000</starttime>
+		<endtime> 18000</endtime>
 		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="1">
 			<StartX> 0 </StartX>
-			<StartY> 20 </StartY>
+			<StartY> 80 </StartY>
 			<Width> 100 </Width>
 			<Height> 100 </Height>
 			<BgColor> red,50 </BgColor>
@@ -48,20 +47,19 @@
 			<Skip_time> 50000 </Skip_time>
 		</parameters>
 	</annotation>
-
 	<annotation id="3" type="com.vid.overlay.comp.Jcomp.SpotLight">
-		<starttime>1500</starttime>
-		<endtime> 15000</endtime>
+		<starttime>10000</starttime>
+		<endtime> 150000</endtime>
 		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="2">
 			<StartX> 120 </StartX>
-			<StartY> 20 </StartY>
+			<StartY> 80 </StartY>
 			<Width> 100 </Width>
 			<Height> 100 </Height>
 			<BgColor> red,50 </BgColor>
-			<DisplayString>Seek</DisplayString>
+			<DisplayString>OTHER_VIDEO</DisplayString>
 			<!-- if current is blank take background -->
-			<DisplayStringColor></DisplayStringColor>
+			<DisplayStringColor>white,50</DisplayStringColor>
 			<Font></Font>
 			<ComponentImage>/icons/close-circle-512.png</ComponentImage>
 			<HoverString></HoverString>
@@ -72,20 +70,19 @@
 			<Skip_time> 50000 </Skip_time>
 		</parameters>
 	</annotation>
-
 	<annotation id="4" type="com.vid.overlay.comp.Jcomp.SpotLight">
-		<starttime>2500</starttime>
+		<starttime>30000</starttime>
 		<endtime> 33000</endtime>
 		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="3">
 			<StartX> 240 </StartX>
-			<StartY> 20 </StartY>
+			<StartY> 80 </StartY>
 			<Width> 100 </Width>
 			<Height> 100 </Height>
-			<BgColor> red,50 </BgColor>
-			<DisplayString>Seek</DisplayString>
+			<BgColor> blue,50 </BgColor>
+			<DisplayString>OTHER_WEB_PAGE</DisplayString>
 			<!-- if current is blank take background -->
-			<DisplayStringColor> pink </DisplayStringColor>
+			<DisplayStringColor> pink,30 </DisplayStringColor>
 			<Font></Font>
 			<ComponentImage>/icons/close-circle-512.png</ComponentImage>
 			<HoverString></HoverString>
@@ -95,78 +92,167 @@
 			<Skip_time></Skip_time>
 		</parameters>
 	</annotation>
-
 	<annotation id="5" type="com.vid.overlay.comp.Jcomp.SpeechBubble">
-		<starttime>3000</starttime>
-		<endtime> 250000</endtime>
+		<starttime>50000</starttime>
+		<endtime> 2500000</endtime>
 		<comp_type>JCOMPONENT</comp_type>
 		<parameters set="3">
 			<StartX> 360 </StartX>
 			<StartY> 120 </StartY>
 			<Width> 160 </Width>
 			<Height> 40 </Height>
-			<BgColor> red,50 </BgColor>
-			<DisplayString>Speech Bubble</DisplayString>
+			<BgColor> white,100 </BgColor>
+			<DisplayString>This is Speech Bubble</DisplayString>
 			<!-- if current is blank take background -->
-			<DisplayStringColor> black,50 </DisplayStringColor>
+			<DisplayStringColor> black,70 </DisplayStringColor>
 			<Font></Font>
 			<HoverString></HoverString>
 			<ImageType>BLACK</ImageType>
 		</parameters>
 	</annotation>
 
+	<annotation id="10" type="com.vid.overlay.comp.Jcomp.CustomLabel">
+		<starttime>88000</starttime>
+		<endtime> 250000</endtime>
+		<comp_type>JCOMPONENT</comp_type>
+		<parameters set="1">
+			<StartX> 150 </StartX>
+			<StartY> 500 </StartY>
+			<Width> 300 </Width>
+			<Height> 40 </Height>
+			<BgColor> red,50 </BgColor>
+			<DisplayString> This is custom label </DisplayString>
+			<DisplayStringColor> blue,70 </DisplayStringColor>
+			<Font></Font>
+			<HoverString> Hover </HoverString>
+		</parameters>
+	</annotation>
+	<annotation id="11"
+		type="com.vid.overlay.comp.Jcomp.CustomEntireVideoComment">
+		<starttime>0</starttime>
+		<endtime> 250000</endtime>
+		<comp_type>JCOMPONENT</comp_type>
+		<parameters set="1">
+			<StartX> 0 </StartX>
+			<StartY> 0 </StartY>
+			<Height> 40 </Height>
+			<BgColor> darkGray,50 </BgColor>
+			<DisplayString>
+				This is Entire Video Comment
+			</DisplayString>
+			<DisplayStringColor> red,60
+			</DisplayStringColor>
+			<Font></Font>
+			<HoverString> Hover </HoverString>
+		</parameters>
+	</annotation>
+
+	<!-- RECTANGLE, LINE, OVAL, POLYGON, STRING, IMAGE, ARROW, ROUNDED_RECTANGLE -->
+
 	<annotation id="6"
-		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
-		<starttime>1000</starttime>
-		<endtime> 25000</endtime>
+		type="com.vid.overlay.comp.Scomp.CustomStaticComponent">
+		<starttime>1500</starttime>
+		<endtime> 2500000</endtime>
 		<comp_type>SHAPE</comp_type>
-		<static_component id="1" type="Rectangle" set="1">
-			<color>white</color>
+		<static_component id="1" type="RECTANGLE" set="1" />
+		<parameters>
+			<color>white,30</color>
 			<startX>100</startX>
 			<startY>150</startY>
 			<width>100</width>
 			<height>100</height>
 			<fillArea>true</fillArea>
-		</static_component>
+		</parameters>
 	</annotation>
-
 	<annotation id="7"
-		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
-		<starttime>1000</starttime>
-		<endtime> 2000</endtime>
-
-		<static_component id="2" type="Arrow" set="1">
-			<color>BLUE</color>
+		type="com.vid.overlay.comp.Scomp.CustomStaticComponent">
+		<starttime>150000</starttime>
+		<endtime> 2000000</endtime>
+		<comp_type>SHAPE</comp_type>
+		<static_component id="2" type="ARROW" set="1" />
+		<parameters>
+			<color>BLUE,40</color>
 			<startX>80</startX>
 			<startY>292</startY>
 			<size>50</size>
-			<ArrowDirection>ArrowDirection.LEFT</ArrowDirection>
-		</static_component>
+			<ArrowDirection>LEFT</ArrowDirection>
+			<fillArea>true</fillArea>
+		</parameters>
 	</annotation>
-
 	<annotation id="8"
-		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
-		<starttime>1500</starttime>
-		<endtime> 20000</endtime>
+		type="com.vid.overlay.comp.Scomp.CustomStaticComponent">
+		<starttime>150000</starttime>
+		<endtime> 20000000</endtime>
 		<comp_type>SHAPE</comp_type>
-		<static_component id="3" type="String" set="1">
-			<Color>red</Color>
-			<str>Heavyweight overlay test</str>
+		<static_component id="3" type="STRING" set="1" />
+		<parameters>
+			<Color>red,100</Color>
+			<str>Heavyweight overlay test
+			</str>
 			<x>100</x>
 			<y>300</y>
 			<font></font>
-		</static_component>
+		</parameters>
 	</annotation>
-	<annotation id="6"
-		type="com.vid.overlay.comp.Scomp.PaintStaticComponent">
-		<starttime>10000</starttime>
-		<endtime> 25000</endtime>
+	<annotation id="9"
+		type="com.vid.overlay.comp.Scomp.CustomStaticComponent">
+		<starttime>1500</starttime>
+		<endtime> 250000</endtime>
 		<comp_type>SHAPE</comp_type>
-		<static_component id="4" type="Image" set="4">
-			<Color>black</Color>
+		<static_component type="IMAGE" id="4" />
+		<parameters>
+			<Color>black,50</Color>
 			<Image>/icons/camera.png</Image>
-			<x>400</x>
+			<x>0</x>
 			<y>200</y>
-		</static_component>
+		</parameters>
+	</annotation>
+	<annotation id="14"
+		type="com.vid.overlay.comp.Scomp.CustomStaticComponent">
+		<starttime>1500</starttime>
+		<endtime> 2500000</endtime>
+		<comp_type>SHAPE</comp_type>
+		<static_component id="1" type="ROUNDED_RECTANGLE"
+			set="1" />
+		<parameters>
+			<color>white,30</color>
+			<startX>200</startX>
+			<startY>150</startY>
+			<width>100</width>
+			<height>100</height>
+			<width>20</width>
+			<height>20</height>
+			<fillArea>true</fillArea>
+		</parameters>
+	</annotation>
+
+	<annotation id="13"
+		type="com.vid.overlay.comp.Scomp.CustomStaticComponent">
+		<starttime>150000</starttime>
+		<endtime> 20000000</endtime>
+		<comp_type>SHAPE</comp_type>
+		<static_component id="3" type="LINE" set="1" />
+		<parameters>
+			<Color>red,100</Color>
+			<x1>0</x1>
+			<y1>0</y1>
+			<x2>200</x2>
+			<y2>200</y2>
+		</parameters>
+	</annotation>
+	<annotation id="12"
+		type="com.vid.overlay.comp.Scomp.CustomStaticComponent">
+		<starttime>150000</starttime>
+		<endtime> 2500000</endtime>
+		<comp_type>SHAPE</comp_type>
+		<static_component id="12" type="OVAL" set="1" />
+		<parameters>
+			<color>white,30</color>
+			<startX>600</startX>
+			<startY>150</startY>
+			<width>100</width>
+			<height>50</height>
+			<fillArea>true</fillArea>
+		</parameters>
 	</annotation>
 </Video_anno_data>    

@@ -1,6 +1,7 @@
 package com.vid.overlay.comp.Jcomp;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
@@ -29,6 +30,8 @@ public class CustomJComponent extends JComponent {
 
 	protected static final JComponentLog logger = AppLogger.getJComponentLog();
 
+	private String id;
+
 	// Shape related attributes
 	private Integer startX;
 	private Integer startY;
@@ -47,7 +50,6 @@ public class CustomJComponent extends JComponent {
 	private SHAPE_TYPE shpe;
 
 	private final JFrame mainFrame = CustomVideoPlayer.getMainFrame();
-	private final EmbeddedMediaPlayer mediaPlayer = CustomVideoPlayer.getMediaPlayer();
 
 	private final COMPONENT_TYPE component_TYPE = COMPONENT_TYPE.JCOMPONENT;
 
@@ -69,7 +71,7 @@ public class CustomJComponent extends JComponent {
 		setHeight(height);
 		setHoverString(hoverString);
 
-		defineParameter();
+		// defineParameter();
 	}
 
 	protected void defineParameter() {
@@ -178,8 +180,9 @@ public class CustomJComponent extends JComponent {
 		closeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				closeButton.getParent().getComponentAt(closeButton.getX() - getWidth() + 10, closeButton.getY() + 10)
-						.setVisible(false);
+				Component componentAt = closeButton.getParent().getComponentAt(closeButton.getX() - getWidth() + 10,
+						closeButton.getY() + 10);
+				componentAt.setVisible(false);
 				closeButton.setVisible(false);
 				if (textPane != null)
 					textPane.setVisible(false);
@@ -201,7 +204,7 @@ public class CustomJComponent extends JComponent {
 	}
 
 	public EmbeddedMediaPlayer getMediaPlayer() {
-		return mediaPlayer;
+		return CustomVideoPlayer.getMediaPlayer();
 	}
 
 	public JTextPane getTextPane() {
@@ -234,6 +237,14 @@ public class CustomJComponent extends JComponent {
 
 	public COMPONENT_TYPE getComponent_TYPE() {
 		return component_TYPE;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

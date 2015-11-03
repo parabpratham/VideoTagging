@@ -46,6 +46,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.vid.commons.Helper;
+import com.vid.play.overlay.OverLayGenerator;
 
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.binding.internal.libvlc_marquee_position_e;
@@ -266,6 +267,7 @@ public class PlayerControlsPanel extends JPanel {
 			 * if (positionValue > 0.99f) { positionValue = 0.99f; }
 			 */
 			mediaPlayer.setTime(positionValue);
+
 		}
 	}
 
@@ -584,7 +586,7 @@ public class PlayerControlsPanel extends JPanel {
 			});
 		}
 	}
-	
+
 	private void updateTime(long millis) {
 		String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
 				TimeUnit.MILLISECONDS.toMinutes(millis)
@@ -596,7 +598,7 @@ public class PlayerControlsPanel extends JPanel {
 
 	private void updateOverlay() {
 		// positionProgressBar.setValue(value);
-		generator.updateCurrentTime();
+		// generator.updateCurrentTime();
 	}
 
 	private void updatePosition(int value) {
@@ -646,10 +648,9 @@ public class PlayerControlsPanel extends JPanel {
 	public void setFileChooser(JFileChooser fileChooser) {
 		this.fileChooser = fileChooser;
 	}
-	
-	public void setPauseIcon(){
-		playPauseButton
-		.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_play_blue.png")));
+
+	public void setPauseIcon() {
+		playPauseButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_play_blue.png")));
 	}
-	
+
 }

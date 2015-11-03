@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
@@ -20,6 +23,38 @@ public class Helper {
 
 	private static final TraceLog logger = AppLogger.getTraceLog();
 
+	private static Map<String, Map<String, Class<?>[]>> classMethods = new HashMap<>();
+
+	/**
+	 * @param ClassName
+	 * @return MethodParameterMap Map<MethodName, Parameters : Class<?>[]>
+	 * 
+	 *         <p>
+	 *         A sort of cache for the CustomComponent classes setter
+	 *         metthods.Stores the method name against the parameters for
+	 *         invoking the methods later.
+	 *         </p>
+	 */
+	public static Map<String, Class<?>[]> addToMethodMap(String className) {
+
+		if (getClassMethods().get(className) == null) {
+			logger.trace(className);
+			Map<String, Class<?>[]> methodParameterMap = new HashMap<String, Class<?>[]>();
+			try {
+				Method[] methods = Class.forName(className).newInstance().getClass().getMethods();
+				for (Method method : methods) {
+					if (method.getName().startsWith("set")) {
+						methodParameterMap.put(method.getName(), method.getParameterTypes());
+					}
+				}
+				getClassMethods().put(className, methodParameterMap);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+		}
+		return getClassMethods().get(className);
+	}
+
 	public static String setTotalTime(long millis) {
 		String s = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
 				TimeUnit.MILLISECONDS.toMinutes(millis)
@@ -28,6 +63,19 @@ public class Helper {
 						- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 		return s;
 	}
+
+	/**
+	 * @param Class<?>
+	 *            pType
+	 * @param XMLElement
+	 *            parameter
+	 * @return InstanceOfTheComponent
+	 * 
+	 *         Depending upon the component_type generates the appropriate
+	 *         instance of the parameters to be passed for invoking the setter
+	 *         methods
+	 * 
+	 */
 
 	public static Object parseParameter(Class<?> pType, Element parameter) {
 
@@ -81,6 +129,14 @@ public class Helper {
 		}
 
 		return newInstance;
+	}
+
+	public static Map<String, Map<String, Class<?>[]>> getClassMethods() {
+		return classMethods;
+	}
+
+	public static void setClassMethods(Map<String, Map<String, Class<?>[]>> classMethods) {
+		Helper.classMethods = classMethods;
 	}
 
 }

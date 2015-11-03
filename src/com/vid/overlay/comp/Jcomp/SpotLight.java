@@ -13,13 +13,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import com.sun.xml.internal.ws.client.sei.ValueSetter;
-import com.vid.overlay.comp.Jcomp.SpeechBubble.SpeechBubbleImageType;
 import com.vid.overlay.comp.master.JComponentType;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 import com.vid.play.CustomMediaPlayerFactory;
 import com.vid.play.CustomVideoPlayer;
-import com.vid.play.OverLayGenerator;
+import com.vid.play.overlay.OverLayGenerator;
 
 public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 
@@ -63,11 +61,10 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
 		setFont(font);
-		defineParameter();
 	}
 
 	@Override
-	protected void defineParameter() {
+	public void defineParameter() {
 		super.defineParameter();
 		setjComponentType(JComponentType.SPOT_LIGHT);
 		setChildTextPane();
@@ -95,7 +92,6 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 		setSkip_time(skip_time);
 		setComponentImage(componentImage);
 		setFont(font);
-		defineParameter();
 	}
 
 	// Constructor for web_link
@@ -111,8 +107,6 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 		setLink_address(link_address);
 		setComponentImage(componentImage);
 		setFont(font);
-
-		defineParameter();
 	}
 
 	@Override
@@ -120,7 +114,7 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 		super.registerListeners();
 		addMouseListener(new MouseAdapter() {
 
-			private final OverLayGenerator generator = CustomVideoPlayer.getOverLayGenerator();
+			private OverLayGenerator generator = CustomVideoPlayer.getOverLayGenerator();
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -129,9 +123,7 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 				try {
 					if (link_type == Link_type.LINK_TO_SAME_VIDEO) {
 						generator.enableOverlay(false);
-						getMediaPlayer().stop();
-						getMediaPlayer().play();
-						getMediaPlayer().skip(skip_time);
+						getMediaPlayer().skip(skip_time-getMediaPlayer().getTime());
 						generator.enableOverlay(true);
 					} else if (link_type == Link_type.LINK_TO_OTHER_VIDEO) {
 						CustomMediaPlayerFactory.addMedia(getMd_address());
@@ -139,7 +131,7 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 						Thread.sleep(1000);
 						CustomMediaPlayerFactory.playMedias(CustomMediaPlayerFactory.getMediaList().size() - 1);
 					} else if (link_type == Link_type.LINK_TO_OTHER_WEB_PAGE) {
-						getMediaPlayer().pause();
+						CustomMediaPlayerFactory.pauseMedia();
 						CustomVideoPlayer.getControlsPanel().setPauseIcon();
 						if (uri != null)
 							Desktop.getDesktop().browse(uri);
@@ -164,7 +156,27 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
+	public void paint(Graphics g) {
+		
+		// System.out.println(this.getClass().getName() + " " + SpotLight.class.getName() + ": paint called ");
+
+		super.paint(g);
+		
+		Graphics2D g2 = (Graphics2D) g;
+
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+
+		g2.setPaint(getBgColor());
+		g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+		g2.fillRect(0, 0, getWidth(), getHeight());
+		if (getComponentImage() != null)
+			g2.drawImage(getComponentImage(), 0, 0, getWidth() - 1, getHeight() - 1, null);
+
+
+	}
+
+	protected void paintComponentOld(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

@@ -36,7 +36,6 @@ public class SpeechBubble extends CustomJComponent implements JCompoWithTextPane
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setFont(font);
-		defineParameter();
 	}
 
 	@Override
@@ -54,15 +53,33 @@ public class SpeechBubble extends CustomJComponent implements JCompoWithTextPane
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
+	public void paint(Graphics g) {
+		super.paint(g);
 		Graphics2D g2 = (Graphics2D) g;
-
+		//System.out.println(this.getClass().getName() + " " + CustomJComponent.class.getName() + ": paint called ");
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 
 		g2.setPaint(getBgColor());
-		g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
-		g2.fillRect(0, 0, getWidth(), getHeight());
+		g2.fillRect(getX()+20, getY()+0, getWidth() - 1, getHeight() - 1);
+		if (getComponentImage() != null)
+			g2.drawImage(getComponentImage(), getX(), getY(), getWidth(), getHeight(), null);
+		else
+			logger.trace("No component found");
+
+		//System.out.println(this.getClass().getName() + " " + SpeechBubble.class.getName() + ": paint called ");
+
+	}
+
+	protected void paintComponentOld(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		System.out.println(this.getClass().getName() + " " + CustomJComponent.class.getName() + ": paint called ");
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+
+		g2.setPaint(getBgColor());
+		g2.fillRect(20, 0, getWidth() - 1, getHeight() - 1);
 		if (getComponentImage() != null)
 			g2.drawImage(getComponentImage(), 0, 0, getWidth(), getHeight(), null);
 		else
