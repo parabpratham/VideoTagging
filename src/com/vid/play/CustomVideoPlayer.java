@@ -21,6 +21,7 @@ import javax.swing.JTabbedPane;
 
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.TraceLog;
+import com.vid.play.overlay.OverLayGenerator;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -158,7 +159,8 @@ public class CustomVideoPlayer {
 		});
 		// Add keyboard event listners
 		addAWTEventListener();
-
+		// for setting full screen
+		getMainFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
 		getMainFrame().setVisible(true);
 		getMediaPlayer().addMediaPlayerEventListener(new PlayerMediaPlayerEventListener());
 
