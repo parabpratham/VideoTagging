@@ -21,7 +21,7 @@ public class CustomMediaPlayerFactory extends MediaPlayerFactory {
 		mediaPlayer = newEmbeddedMediaPlayer();
 		mediaListPlayer.setMediaPlayer(mediaPlayer);
 		mediaListPlayer.setMediaList(mediaList);
-		mediaListPlayer.setMode(MediaListPlayerMode.LOOP);
+		//mediaListPlayer.setMode(MediaListPlayerMode.LOOP);
 	}
 
 	public static void addMedia(String mrl) {

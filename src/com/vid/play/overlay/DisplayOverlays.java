@@ -1,26 +1,26 @@
 package com.vid.play.overlay;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+
 import com.vid.execute.AppLogger;
-
 import com.vid.log.trace.overlay.OverlayLog;
-
+import com.vid.matroska.MatroskaContainer;
 import com.vid.play.CustomVideoPlayer;
+import com.vid.play.PlayerControlsPanel;
 import com.vid.play.overlay.OverlayFactory.CustomOverlayMarker;
 
 import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class DisplayOverlays implements Runnable {
-
-	private EmbeddedMediaPlayer mediaPlayer;
-
-	private long currentTime;
 
 	public final static Object overlay = new Object();
 
@@ -32,12 +32,13 @@ public class DisplayOverlays implements Runnable {
 
 	private Map<Integer, CustomOverlayMarker> overlays;
 
+	private MatroskaContainer container;
+
 	public DisplayOverlays() {
 	}
 
-	public DisplayOverlays(MediaPlayer mediaPlayer, long currentTime) {
-		this.mediaPlayer = (EmbeddedMediaPlayer) mediaPlayer;
-		this.currentTime = currentTime;
+	public DisplayOverlays(MatroskaContainer container) {
+		setContainer(container);
 	}
 
 	public static void notifyOverlay() {
@@ -55,11 +56,26 @@ public class DisplayOverlays implements Runnable {
 		}
 		registerListeners();
 		nextTime = 0;
+		// displayOverlayTimeLine();
+	}
+
+	private void displayOverlayTimeLine() {
+		Hashtable<Integer, JComponent> table = new Hashtable<Integer, JComponent>();
+		System.out.println("Overlay size " + keySet.size());
+		for (Integer startTime : keySet) {
+			table.put(startTime, getJcompToDisplay());
+		}
+		PlayerControlsPanel.test(table, true);
+	}
+
+	private JComponent getJcompToDisplay() {
+		JLabel marker = new JLabel("Hi") {
+		};
+		return marker;
 	}
 
 	private void registerListeners() {
 		getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
-
 			@Override
 			public void newMedia(MediaPlayer mediaPlayer) {
 				super.newMedia(mediaPlayer);
@@ -67,8 +83,8 @@ public class DisplayOverlays implements Runnable {
 
 			@Override
 			public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
-				super.timeChanged(mediaPlayer, newTime);
-				if (newTime > nextTime) {
+				logger.trace("Display overlay Event called");
+				if (newTime >= nextTime) {
 					int overlayIndex = 0;
 					for (; overlayIndex < keySet.size() - 1; overlayIndex++) {
 						if (newTime >= keySet.get(overlayIndex) && newTime < keySet.get(overlayIndex + 1)) {
@@ -76,7 +92,7 @@ public class DisplayOverlays implements Runnable {
 								logger.trace("Display overlay " + overlayIndex + " " + keySet.get(overlayIndex) + " "
 										+ newTime + " " + keySet.get(overlayIndex + 1));
 								CustomOverlay customeOverlay = new CustomOverlay(null,
-										getOverlays().get(keySet.get(overlayIndex)));
+										getOverlays().get(keySet.get(overlayIndex)), getContainer());
 								customeOverlay.setId(overlayIndex);
 								addOverlay(customeOverlay);
 							} catch (Exception e) {
@@ -120,39 +136,12 @@ public class DisplayOverlays implements Runnable {
 
 	}
 
-	// In the previous approach where different thread was used
-	private void displayOverlay(List<Integer> keySet) {
-		logger.trace(getOverlays().size() + " " + currentTime);
-		synchronized (overlay) {
-			if (OverLayGenerator.getOverlays().size() == 0) {
-				mediaPlayer.setOverlay(null);
-				System.out.println(Thread.currentThread().getName() + " setOverlay(null) " + currentTime);
-				logger.trace(" setOverlay(null) " + currentTime);
-			} else {
-				Outer: for (int startTime : keySet) {
-					System.out.println(startTime + " " + OverLayGenerator.getOverlays().get(startTime));
-					CustomOverlay customeOverlay = new CustomOverlay(null, getOverlays().get(startTime));
-					// TODO replace with appropriate
-					if (startTime <= currentTime + 267) {
-						logger.trace(Thread.currentThread().getName() + " " + startTime + " " + currentTime);
-						customeOverlay.setHasBeenDisplayed(true);
-						// System.out.println(Thread.currentThread().getName()
-						// + " " + startTime + " " + currentTime
-						// + " " + customeOverlay.getComponentCount());
-						mediaPlayer.setOverlay(customeOverlay);
-						// mediaPlayer.setOverlay(new
-						// CustomOverlayTest(null, 0, 0, 1));
-						mediaPlayer.enableOverlay(true);
-						OverLayGenerator.getOverlays().remove(customeOverlay.getStartTime());
-					} else if (customeOverlay != null && customeOverlay.isHasBeenDisplayed()
-							&& customeOverlay.getEndTime() < currentTime + 267) {
-						if (getOverlays().containsKey(startTime))
-							getOverlays().remove(startTime);
-					}
-					break Outer;
-				}
-			}
-		}
+	public MatroskaContainer getContainer() {
+		return container;
+	}
+
+	public void setContainer(MatroskaContainer container) {
+		this.container = container;
 	}
 
 }

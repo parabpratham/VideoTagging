@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.overlay.OverlayLog;
+import com.vid.matroska.MatroskaContainer;
 import com.vid.play.CustomMediaPlayerFactory;
 import com.vid.play.CustomVideoPlayer;
 import com.vid.play.overlay.OverlayFactory.CustomOverlayMarker;
@@ -20,14 +21,9 @@ import uk.co.caprica.vlcj.player.list.MediaListPlayerEventAdapter;
 
 public class OverLayGenerator {
 
-	// private static Map<Integer, CustomOverlayTest> overlays;
-
 	private static Map<Integer, CustomOverlayMarker> overlays;
 
 	private boolean isTransperantWindowSupport;
-
-	private static final EmbeddedMediaPlayer mediaPlayer = CustomVideoPlayer.getMediaPlayer();
-	private static final MediaListPlayer mediaListPlayer = CustomMediaPlayerFactory.getMediaListPlayer();
 
 	private static ThreadGroup tg;
 	private static ThreadGroup dg;
@@ -50,14 +46,6 @@ public class OverLayGenerator {
 		registerListeners();
 	}
 
-	public boolean isTransperantWindowSupport() {
-		return isTransperantWindowSupport;
-	}
-
-	public void setTransperantWindowSupport(boolean isTransperantWindowSupport) {
-		this.isTransperantWindowSupport = isTransperantWindowSupport;
-	}
-
 	/**
 	 * To read the annotations from the xml file and generate overlays to be
 	 * displayed
@@ -68,45 +56,56 @@ public class OverLayGenerator {
 	 * 
 	 */
 	private void startNewGeneratorFactory() {
-		tg = new ThreadGroup("Overlays Threads");
-		new OverlayFactory();
-		logger.trace(tg.activeCount() + " threads in thread group.");
+
+		MatroskaContainer container = new MatroskaContainer(CustomVideoPlayer.getVideoAdd());
+		new OverlayFactory(container);
 		overlays = OverlayFactory.getOverlayMarkerMap();
-		new Thread(dg, new DisplayOverlays(), "Display_Overlay").start();
-		DisplayOverlays.notifyOverlay();
+		if (overlays != null) {
+			dg = new ThreadGroup("Overlays Threads");
+			new Thread(dg, new DisplayOverlays(container), "Display_Overlay").start();
+			logger.trace(dg.activeCount() + " threads in thread group.");
+			DisplayOverlays.notifyOverlay();
+		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void resetOverlays() {
-
-		Thread thrds[] = new Thread[dg.activeCount()];
-		dg.enumerate(thrds);
-		for (Thread t : thrds) {
-			logger.trace(t.getName() + " Stopping " + t.getName());
-			if (t.isAlive())
-				t.stop();
+		try {
+			Thread thrds[] = new Thread[dg.activeCount()];
+			dg.enumerate(thrds);
+			for (Thread t : thrds) {
+				logger.trace(t.getName() + " Stopping " + t.getName());
+				if (t.isAlive())
+					t.stop();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	public void stopVideoOerlays() {
-		logger.trace("StopVideo Called " + Calendar.getInstance().getTimeInMillis());
-		enableOverlay(false);
-		Thread thrds[] = new Thread[tg.activeCount()];
-		tg.enumerate(thrds);
-		for (Thread t : thrds) {
-			logger.trace(t.getName() + " Stopping " + t.getName());
-			if (t.isAlive())
-				t.stop();
+		if (tg != null) {
+			try {
+				logger.trace("StopVideo Called " + Calendar.getInstance().getTimeInMillis());
+				enableOverlay(false);
+				Thread thrds[] = new Thread[tg.activeCount()];
+				tg.enumerate(thrds);
+				for (Thread t : thrds) {
+					logger.trace(t.getName() + " Stopping " + t.getName());
+					if (t.isAlive())
+						t.stop();
+				}
+			} catch (Exception e) {
+			}
 		}
-
 		resetOverlays();
-
 	}
 
 	static int i = 0;
 
 	private void registerListeners() {
-		mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+		getMediaPlayer().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
 			@Override
 			public void playing(MediaPlayer mediaPlayer) {
 			}
@@ -150,7 +149,7 @@ public class OverLayGenerator {
 
 		});
 
-		mediaListPlayer.addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
+		getMediaListPlayer().addMediaListPlayerEventListener(new MediaListPlayerEventAdapter() {
 
 			@Override
 			public void stopped(MediaListPlayer mediaListPlayer) {
@@ -173,6 +172,7 @@ public class OverLayGenerator {
 			@Override
 			public void mediaStateChanged(MediaListPlayer mediaListPlayer, int newState) {
 				// TODO Auto-generated method stub
+				logger.trace("Media state changed " + newState);
 				super.mediaStateChanged(mediaListPlayer, newState);
 			}
 		});
@@ -180,7 +180,7 @@ public class OverLayGenerator {
 	}
 
 	public void enableOverlay(boolean b) {
-		mediaPlayer.enableOverlay(b);
+		getMediaPlayer().enableOverlay(b);
 	}
 
 	public static Map<Integer, CustomOverlayMarker> getOverlays() {
@@ -198,6 +198,22 @@ public class OverLayGenerator {
 		synchronized (obj) {
 			obj.notifyAll();
 		}
+	}
+
+	public static final EmbeddedMediaPlayer getMediaPlayer() {
+		return CustomVideoPlayer.getMediaPlayer();
+	}
+
+	public static final MediaListPlayer getMediaListPlayer() {
+		return CustomMediaPlayerFactory.getMediaListPlayer();
+	}
+
+	public boolean isTransperantWindowSupport() {
+		return isTransperantWindowSupport;
+	}
+
+	public void setTransperantWindowSupport(boolean isTransperantWindowSupport) {
+		this.isTransperantWindowSupport = isTransperantWindowSupport;
 	}
 
 }

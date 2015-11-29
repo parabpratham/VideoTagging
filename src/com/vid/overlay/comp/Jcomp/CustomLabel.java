@@ -24,13 +24,22 @@ public class CustomLabel extends CustomJComponent {
 	}
 
 	public CustomLabel(int startX, int startY, int width, int height, Color bgColor, String displayString,
-			Color displayStringColor, Font font, String hoverString) {
+			Color displayStringColor, Font font, String hoverString, boolean setResizeble) {
 
-		super(startX, startY, width, height, hoverString);
+		super(startX, startY, width, height, hoverString, setResizeble);
 		setBgColor(bgColor);
-		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setFont(font);
+		setDisplayString(displayString);
+		defineParameters();
+	}
+
+	@Override
+	protected void defineParameters() {
+		super.defineParameters();
+		setjComponentType(JComponentType.CUSTOM_LABEL);
+		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
+		setChildTextPane();
 	}
 
 	@Override
@@ -38,6 +47,12 @@ public class CustomLabel extends CustomJComponent {
 		super.defineParameter();
 		setjComponentType(JComponentType.CUSTOM_LABEL);
 		setShpe(SHAPE_TYPE.ROUNDED_RECTANGLE);
+		setChildTextPane();
+	}
+
+	public void setChildTextPane() {
+		super.setTextPane();
+		setTextPaneBounds(getStartX() + 20, getStartY(), getWidth() - 20, getHeight());
 	}
 
 	@Override
@@ -51,11 +66,6 @@ public class CustomLabel extends CustomJComponent {
 		g2.setPaint(getBgColor());
 		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
 		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-
-		g2.setPaint(getDisplayStringColor());
-		g2.setFont(getFont());
-		// TODO edit the starting position so that always center of the labelbox
-		g2.drawString(getDisplayString(), 10, 16);
 
 	}
 

@@ -28,19 +28,36 @@ public class SpeechBubble extends CustomJComponent implements JCompoWithTextPane
 	}
 
 	public SpeechBubble(int startX, int startY, int width, int height, Color bgColor, String displayString,
-			Color displayStringColor, Font font, SpeechBubbleImageType imageType, String hoverString) {
+			Color displayStringColor, Font font, SpeechBubbleImageType imageType, String hoverString,
+			boolean setResizeble) {
 
-		super(startX, startY, width, height, hoverString);
+		super(startX, startY, width, height, hoverString, setResizeble);
 		setImageType(imageType);
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
 		setFont(font);
+
+		defineParameters();
 	}
 
 	@Override
 	protected void defineParameter() {
 		super.defineParameter();
+		setjComponentType(JComponentType.SPEECH_BUBLE);
+
+		if (getImageType() == SpeechBubbleImageType.BLACK)
+			setComponentImage(new ImageIcon(getClass().getResource("/icons/SpeechBubble_white.png")).getImage());
+		else
+			setComponentImage(new ImageIcon(getClass().getResource("/icons/SpeechBubble_black.png")).getImage());
+
+		setChildTextPane();
+
+	}
+
+	@Override
+	protected void defineParameters() {
+		super.defineParameters();
 		setjComponentType(JComponentType.SPEECH_BUBLE);
 
 		if (getImageType() == SpeechBubbleImageType.BLACK)
@@ -56,18 +73,20 @@ public class SpeechBubble extends CustomJComponent implements JCompoWithTextPane
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2 = (Graphics2D) g;
-		//System.out.println(this.getClass().getName() + " " + CustomJComponent.class.getName() + ": paint called ");
+		// System.out.println(this.getClass().getName() + " " +
+		// CustomJComponent.class.getName() + ": paint called ");
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 
 		g2.setPaint(getBgColor());
-		g2.fillRect(getX()+20, getY()+0, getWidth() - 1, getHeight() - 1);
+		g2.fillRect(getX() + 20, getY() + 0, getWidth() - 1, getHeight() - 1);
 		if (getComponentImage() != null)
 			g2.drawImage(getComponentImage(), getX(), getY(), getWidth(), getHeight(), null);
 		else
 			logger.trace("No component found");
 
-		//System.out.println(this.getClass().getName() + " " + SpeechBubble.class.getName() + ": paint called ");
+		// System.out.println(this.getClass().getName() + " " +
+		// SpeechBubble.class.getName() + ": paint called ");
 
 	}
 

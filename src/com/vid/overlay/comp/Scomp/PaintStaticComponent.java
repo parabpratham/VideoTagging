@@ -4,25 +4,19 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
-
 import org.jdom2.Element;
 
-import com.vid.commons.Fonts;
 import com.vid.commons.Helper;
 import com.vid.commons.Points;
-import com.vid.commons.SupportedColors;
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.overlay.OverlayLog;
-import com.vid.overlay.comp.Jcomp.SpeechBubble.SpeechBubbleImageType;
-import com.vid.overlay.comp.Jcomp.SpotLight.Link_type;
+import com.vid.matroska.MatroskaContainer;
 import com.vid.overlay.comp.master.SHAPE_TYPE;
 
 public class PaintStaticComponent {
@@ -41,7 +35,7 @@ public class PaintStaticComponent {
 
 	private static void createMethodMap() {
 		try {
-			
+
 			methodMap = new HashMap<String, Class<?>[]>();
 			Method[] methods = PaintStaticComponent.class.getDeclaredMethods();
 			for (Method method : methods) {
@@ -53,8 +47,8 @@ public class PaintStaticComponent {
 			logger.error(e.getMessage());
 		}
 	}
-	
-	public static void drawComponent(Graphics g, SHAPE_TYPE shape_TYPE, Element parameters)
+
+	public static void drawComponent(Graphics g, SHAPE_TYPE shape_TYPE, Element parameters, MatroskaContainer container)
 			throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException {
 
@@ -69,16 +63,15 @@ public class PaintStaticComponent {
 		args[0] = g;
 		List<Element> params = parameters.getChildren();
 		for (int i = 1; i < pType.length; i++) {
-			Object obj = Helper.parseParameter(pType[i], params.get(i - 1));
+			Object obj = Helper.parseParameter(pType[i], params.get(i - 1), container);
 			args[i] = obj;
 		}
 		method.invoke(null, args);
 	}
 
-
-	public static void drawComponent(Graphics g, CustomStaticComponent sComponent, Element parameters)
-			throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException {
+	public static void drawComponent(Graphics g, CustomStaticComponent sComponent, Element parameters,
+			MatroskaContainer container) throws NoSuchMethodException, SecurityException, IllegalAccessException,
+					IllegalArgumentException, InvocationTargetException {
 
 		if (methodMap == null) {
 			createMethodMap();
@@ -92,7 +85,7 @@ public class PaintStaticComponent {
 		args[0] = g;
 		List<Element> params = parameters.getChildren();
 		for (int i = 1; i < pType.length; i++) {
-			Object obj = Helper.parseParameter(pType[i], params.get(i - 1));
+			Object obj = Helper.parseParameter(pType[i], params.get(i - 1), container);
 			args[i] = obj;
 		}
 		method.invoke(null, args);

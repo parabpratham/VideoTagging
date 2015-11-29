@@ -22,6 +22,7 @@ import javax.swing.JTabbedPane;
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.TraceLog;
 import com.vid.play.overlay.OverLayGenerator;
+import com.vid.test.OverlayAdditionPanelTest;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -31,7 +32,8 @@ public class CustomVideoPlayer {
 
 	private static final int width = 800;
 	private static final int height = 600;
-	private static final String VIDEO_ADD = "file:///J:/Movies/Hollywood/we are legion the story of the hacktivists 2012 dvdrip x264.avi";
+
+	private static String VIDEO_ADD = "Annotations.mkv";
 
 	private static final JFrame mainFrame = new JFrame("VLCJ Test Player");;
 	private static final Canvas videoSurface = new Canvas();
@@ -45,6 +47,7 @@ public class CustomVideoPlayer {
 	private static MediaPlayerFactory mediaPlayerFactory;
 	private static EmbeddedMediaPlayer mediaPlayer;
 	private static PlayerVideoAdjustPanel videoAdjustPanel;
+	private static OverlayAdditionPanelTest overlayAddPanel;
 	private static VideoInformationDisplayPanel videoInformationDisplayPanel;
 	private static OverLayGenerator overLayGenerator;
 
@@ -88,14 +91,17 @@ public class CustomVideoPlayer {
 		// Set full screen media player
 		setMediaPlayer(CustomMediaPlayerFactory.getMediaPlayer());
 
-		// Set full overlay generator
-		setOverLayGenerator(new OverLayGenerator());
-
 		// Set full controls panel
 		setControlsPanel(new PlayerControlsPanel());
 
+		// Set full overlay generator
+		setOverLayGenerator(new OverLayGenerator());
+
 		// set video adjust panel
 		setVideoAdjustPanel(new PlayerVideoAdjustPanel());
+
+		// set overlay add panel
+		setOverlayAddPanel(new OverlayAdditionPanelTest());
 
 		// Set Video Information Display Panel
 		setVideoInformationDisplayPanel(new VideoInformationDisplayPanel());
@@ -137,6 +143,7 @@ public class CustomVideoPlayer {
 		// mainFrame.add(videoInformationDisplayPanel, BorderLayout.EAST);
 		getInfopane().add("Media Information", getVideoInformationDisplayPanel());
 		getInfopane().add("Video Adjust", getVideoAdjustPanel());
+		// getInfopane().add("Add overlay", getOverlayAddPanel());
 		getMainFrame().add(getInfopane(), BorderLayout.EAST);
 
 		getMainFrame().setJMenuBar(buildMenuBar());
@@ -231,7 +238,7 @@ public class CustomVideoPlayer {
 	 */
 	public static void playMedia(String mediaAdd) {
 		parseInformation();
-		CustomMediaPlayerFactory.addMedia(mediaAdd);
+		CustomMediaPlayerFactory.addMedia("file:///" + mediaAdd);
 		CustomMediaPlayerFactory.playMedias();
 		getMediaPlayer().mute();
 	}
@@ -367,6 +374,18 @@ public class CustomVideoPlayer {
 
 	public static JFileChooser getFilechooser() {
 		return fileChooser;
+	}
+
+	public static OverlayAdditionPanelTest getOverlayAddPanel() {
+		return overlayAddPanel;
+	}
+
+	public static void setOverlayAddPanel(OverlayAdditionPanelTest overlayAddPanel) {
+		CustomVideoPlayer.overlayAddPanel = overlayAddPanel;
+	}
+
+	public static void setVIDEO_ADD(String vIDEO_ADD) {
+		VIDEO_ADD = vIDEO_ADD;
 	}
 
 }

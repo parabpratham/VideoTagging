@@ -24,6 +24,7 @@ import com.vid.commons.Helper;
 import com.vid.commons.SupportedColors;
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.overlay.OverlayLog;
+import com.vid.matroska.MatroskaContainer;
 import com.vid.overlay.comp.Jcomp.CustomEntireVideoComment;
 import com.vid.overlay.comp.Jcomp.CustomJComponent;
 import com.vid.overlay.comp.Jcomp.CustomLabel;
@@ -53,9 +54,20 @@ public class CustomOverlay extends JWindow {
 											// generated custom comp
 	private CustomOverlayMarker customOverlayMarker;
 	private static OverlayLog logger = AppLogger.getOverlayLog();
+	private MatroskaContainer container;
 
 	public CustomOverlay(Window owner, CustomOverlayMarker customOverlayMarker) {
 		super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
+		setParameters(customOverlayMarker);
+	}
+
+	public CustomOverlay(Window owner, CustomOverlayMarker customOverlayMarker, MatroskaContainer container) {
+		super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
+		setContainer(container);
+		setParameters(customOverlayMarker);
+	}
+
+	private void setParameters(CustomOverlayMarker customOverlayMarker) {
 		AWTUtilities.setWindowOpaque(this, false);
 		setLayout(null);
 
@@ -90,7 +102,7 @@ public class CustomOverlay extends JWindow {
 									addToMethodMap.get("set" + parameter.getName()));
 							Class<?>[] pType = method.getParameterTypes();
 							for (int i = 0; i < pType.length; i++) {
-								Object obj = Helper.parseParameter(pType[i], parameter);
+								Object obj = Helper.parseParameter(pType[i], parameter,container);
 								if (obj != null) {
 									method.invoke(component, obj);
 								}
@@ -117,31 +129,31 @@ public class CustomOverlay extends JWindow {
 		Font font = Fonts.getAppFont();
 
 		CustomLabel label = new CustomLabel(150, 200, 300, 40, new SupportedColors(Color.darkGray, 50),
-				"Hi started playing", new SupportedColors(Color.yellow, 50), font, "Hover");
+				"Hi started playing", new SupportedColors(Color.yellow, 50), font, "Hover", false);
 		addCustomComponent(label);
 
 		ImageIcon icon = new ImageIcon(getClass().getResource("/icons/close-circle-512.png"));
 		SpotLight lightComp_same = new SpotLight(0, 120, 100, 100, new SupportedColors(Color.red, 50), "Seek",
-				getBackground(), font, icon.getImage(), "", Link_type.LINK_TO_SAME_VIDEO, (long) 50000);
+				getBackground(), font, icon.getImage(), "", Link_type.LINK_TO_SAME_VIDEO, (long) 50000, false);
 		addCustomComponent(lightComp_same);
 
 		SpotLight lightComp_diff = new SpotLight(120, 120, 100, 100, new SupportedColors(Color.blue, 50), "next video",
 				getBackground(), font, icon.getImage(), "", Link_type.LINK_TO_OTHER_VIDEO,
-				"file:///C:/Users/hp/Desktop/elan-example1.mpg", (long) 50000);
+				"file:///C:/Users/hp/Desktop/elan-example1.mpg", (long) 50000, false);
 		addCustomComponent(lightComp_diff);
 
 		SpotLight lightComp_web = new SpotLight(240, 120, 100, 100, new SupportedColors(Color.GREEN, 50), "Web",
-				getBackground(), font, null, "", Link_type.LINK_TO_OTHER_WEB_PAGE, "http://www.google.com");
+				getBackground(), font, null, "", Link_type.LINK_TO_OTHER_WEB_PAGE, "http://www.google.com", false);
 		addCustomComponent(lightComp_web);
 
 		SpeechBubble speechBubble = new SpeechBubble(360, 120, 160, 40, new SupportedColors(Color.red, 0),
 				"This is speech Bubble", new SupportedColors(Color.RED, 0), new Font(Fonts.CORBEL, Font.ITALIC, 10),
-				SpeechBubbleImageType.BLACK, "");
+				SpeechBubbleImageType.BLACK, "", false);
 		addCustomComponent(speechBubble);
 
 		CustomEntireVideoComment vc = new CustomEntireVideoComment(50, new SupportedColors(Color.white, 50),
 				"Custom Entire Video Comment", new SupportedColors(Color.red, 20),
-				new Font(Fonts.AGENCY_FB, Font.ITALIC, 18), "Hover");
+				new Font(Fonts.AGENCY_FB, Font.ITALIC, 18), "Hover", false);
 		addCustomComponent(vc);
 
 	}
@@ -157,7 +169,11 @@ public class CustomOverlay extends JWindow {
 			} else if (comp1 != null && comp1 instanceof SpeechBubble) {
 				add(((SpeechBubble) comp1).getTextPane());
 				logger.trace("added " + ((SpeechBubble) comp).getTextPane());
+			} else if (comp1 != null && comp1 instanceof CustomLabel) {
+				add(((CustomLabel) comp1).getTextPane());
+				logger.trace("added " + ((CustomLabel) comp).getTextPane());
 			}
+
 			add(comp1.getCloseButton());
 			logger.trace("added " + comp1.getCloseButton());
 		}
@@ -183,7 +199,7 @@ public class CustomOverlay extends JWindow {
 			if (annotation.getComponent_TYPE() == COMPONENT_TYPE.SHAPE) {
 				try {
 					SHAPE_TYPE shape_TYPE = annotation.getShape_type();
-					PaintStaticComponent.drawComponent(g2, shape_TYPE, annotation.getParameters());
+					PaintStaticComponent.drawComponent(g2, shape_TYPE, annotation.getParameters(),getContainer());
 
 				} catch (NoSuchMethodException e) {
 					e.printStackTrace();
@@ -238,6 +254,14 @@ public class CustomOverlay extends JWindow {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public MatroskaContainer getContainer() {
+		return container;
+	}
+
+	public void setContainer(MatroskaContainer container) {
+		this.container = container;
 	}
 
 }

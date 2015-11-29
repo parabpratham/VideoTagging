@@ -1,11 +1,13 @@
 package com.vid.play.overlay;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ebml.BinaryElement;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
@@ -13,6 +15,7 @@ import org.jdom2.input.SAXBuilder;
 import com.vid.commons.Helper;
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.overlay.OverlayLog;
+import com.vid.matroska.MatroskaContainer;
 import com.vid.overlay.comp.Jcomp.CustomJComponent;
 import com.vid.overlay.comp.Scomp.CustomStaticComponent;
 import com.vid.overlay.comp.master.COMPONENT_TYPE;
@@ -53,10 +56,37 @@ public class XMLJDomParser {
 
 	public Map<AnnotationKey, Annotation> xmlQuery(String fileName) {
 
+		File inputFile = new File(fileName);
+		return xmlQuery(inputFile);
+	}
+
+	public Map<AnnotationKey, Annotation> xmlQuery(MatroskaContainer container) {
+
+		File inputFile = null;
+		try {
+			BinaryElement overlayFileData = container.getFileData(container.getOverlayFile());
+
+			if (overlayFileData == null)
+				return null;
+
+			inputFile = new File(container.getOverlayFile().getValue());
+			FileOutputStream fileOutputStream = new FileOutputStream(inputFile);
+			fileOutputStream.write(overlayFileData.getData().array());
+			fileOutputStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+		}
+		return xmlQuery(inputFile);
+	}
+
+	public Map<AnnotationKey, Annotation> xmlQuery(File inputFile) {
 		try {
 
-			File inputFile = new File(fileName);
-			logger.trace("Fetching elements for :" + fileName);
+			if (inputFile == null)
+				return null;
+
+			logger.trace("Fetching elements for :" + inputFile);
 			SAXBuilder saxBuilder = new SAXBuilder();
 			Document document = saxBuilder.build(inputFile);
 			logger.trace("Root element :" + document.getRootElement().getName());
@@ -313,4 +343,5 @@ public class XMLJDomParser {
 		domParserTest.xmlQuery(
 				"k:/Install/Study/Programming/SpringWorkspace/VideoPlayer/src/resources/overlay_xml/CustomOverlay.xml");
 	}
+
 }

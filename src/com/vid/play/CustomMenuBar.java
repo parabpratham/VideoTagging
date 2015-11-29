@@ -1,5 +1,6 @@
 package com.vid.play;
 
+import java.awt.Menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,6 +11,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 
+import jdk.nashorn.tools.Shell;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class CustomMenuBar {
@@ -101,6 +103,10 @@ public class CustomMenuBar {
 
 	public static JMenuBar getMenubar() {
 		return menuBar;
+	}
+
+	public static Menu menuBar(Shell shell,Menu menu) {
+		return menu;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.vid.commons;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -15,9 +16,11 @@ import org.jdom2.Element;
 
 import com.vid.execute.AppLogger;
 import com.vid.log.trace.TraceLog;
+import com.vid.matroska.MatroskaContainer;
 import com.vid.overlay.comp.Jcomp.SpeechBubble.SpeechBubbleImageType;
 import com.vid.overlay.comp.Jcomp.SpotLight.Link_type;
 import com.vid.overlay.comp.Scomp.PaintStaticComponent.ArrowDirection;
+import com.vid.play.overlay.OverlayFactory;
 
 public class Helper {
 
@@ -77,7 +80,7 @@ public class Helper {
 	 * 
 	 */
 
-	public static Object parseParameter(Class<?> pType, Element parameter) {
+	public static Object parseParameter(Class<?> pType, Element parameter, MatroskaContainer container) {
 
 		if (parameter.getTextTrim().equalsIgnoreCase("")
 				&& !pType.getCanonicalName().equalsIgnoreCase(Font.class.getCanonicalName()))
@@ -107,10 +110,18 @@ public class Helper {
 
 				if (parameter.getTextTrim() == null || parameter.getTextTrim().equalsIgnoreCase(""))
 					newInstance = Fonts.getAppFont();
-				else
-					newInstance = Fonts.getFont(parameter.getTextTrim(), Font.PLAIN, 18);
+				else {
+
+					String[] parameters = parameter.getTextTrim().split(",");
+					// 0 = name, 1=Stylr,2=size
+					newInstance = Fonts.getFont(parameters[0], Integer.parseInt(parameters[1]),
+							Integer.parseInt(parameters[2]));
+
+				}
 			} else if (pType.getCanonicalName().equalsIgnoreCase(Image.class.getCanonicalName())) {
-				newInstance = new ImageIcon(Helper.class.getResource(parameter.getTextTrim())).getImage();
+				byte[] dataFile = container.getDataFile(parameter.getTextTrim());
+				if (dataFile != null)
+					newInstance = new ImageIcon(dataFile).getImage();
 			} else if (pType.getCanonicalName().equalsIgnoreCase(Link_type.class.getCanonicalName())) {
 				newInstance = Link_type.getFromName(parameter.getTextTrim());
 			} else if (pType.getCanonicalName().equalsIgnoreCase(SpeechBubbleImageType.class.getCanonicalName())) {

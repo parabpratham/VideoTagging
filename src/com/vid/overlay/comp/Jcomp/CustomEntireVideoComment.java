@@ -23,9 +23,9 @@ public class CustomEntireVideoComment extends CustomJComponent {
 	}
 
 	public CustomEntireVideoComment(int height, Color bgColor, String displayString, Color displayStringColor,
-			Font font, String hoverString) {
+			Font font, String hoverString, boolean setResizeble) {
 
-		super(0, 0, CustomVideoPlayer.getVideosurface().getWidth() - 20, height, hoverString);
+		super(0, 20, CustomVideoPlayer.getVideosurface().getWidth() - 20, height, hoverString, setResizeble);
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
@@ -33,7 +33,7 @@ public class CustomEntireVideoComment extends CustomJComponent {
 	}
 
 	@Override
-	protected void defineParameter() {
+	public void defineParameter() {
 		setWidth(CustomVideoPlayer.getVideosurface().getWidth() - 50);
 		super.defineParameter();
 		setjComponentType(JComponentType.ENTIRE_VIDEO_COMMENT);

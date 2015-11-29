@@ -31,12 +31,16 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import com.vid.commons.Helper;
+import com.vid.execute.AppLogger;
+import com.vid.log.trace.TraceLog;
 
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.player.MediaDetails;
@@ -53,7 +57,7 @@ public class VideoInformationDisplayPanel extends JPanel {
 	private JCheckBox editVideoInformation;
 
 	private JLabel videoTitleLabel;
-	private JTextArea videoTitleText;
+	private JTextPane videoTitleText;
 
 	private JLabel videoTotalLengthLabel;
 	private JTextField videoTotalLengthText;
@@ -70,10 +74,12 @@ public class VideoInformationDisplayPanel extends JPanel {
 	private MediaDetails mediaDetails;
 	private MediaMeta mediaMeta;
 
-	public VideoInformationDisplayPanel() {
-		this.mediaPlayer = CustomeVideoPlayer.getMediaPlayer();
+	private TraceLog logger = AppLogger.getTraceLog();
 
-		System.out.println("Creating video info UI");
+	public VideoInformationDisplayPanel() {
+		this.mediaPlayer = CustomVideoPlayer.getMediaPlayer();
+
+		logger.trace("Creating video info UI");
 		createUI();
 
 		// new Thread(new UpdateVideoInfo(mediaPlayer)).start();
@@ -99,7 +105,7 @@ public class VideoInformationDisplayPanel extends JPanel {
 		editVideoInformation = new JCheckBox("Change Video Information");
 
 		videoTitleLabel = new JLabel("Title");
-		videoTitleText = new JTextArea();
+		videoTitleText = new JTextPane();
 		videoTitleText.setEnabled(false);
 		String newTitle;
 		videoTitleText.addInputMethodListener(new InputMethodListener() {

@@ -50,9 +50,9 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 	// Constructor for same_video
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
 			Color displayStringColor, Font font, Image componentImage, String hoverString, Link_type link_type,
-			Long skip_time) {
+			Long skip_time, boolean setResizeble) {
 
-		super(startX, startY, width, height, hoverString);
+		super(startX, startY, width, height, hoverString, setResizeble);
 
 		setBgColor(bgColor);
 		setDisplayString(displayString);
@@ -81,9 +81,9 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 	// Constructor for other_video
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
 			Color displayStringColor, Font font, Image componentImage, String hoverString, Link_type link_type,
-			String media_Address, Long skip_time) {
+			String media_Address, Long skip_time, boolean setResizeble) {
 
-		super(startX, startY, width, height, hoverString);
+		super(startX, startY, width, height, hoverString, setResizeble);
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
@@ -97,9 +97,9 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 	// Constructor for web_link
 	public SpotLight(int startX, int startY, int width, int height, Color bgColor, String displayString,
 			Color displayStringColor, Font font, Image componentImage, String hoverString, Link_type link_type,
-			String link_address) {
+			String link_address, boolean setResizeble) {
 
-		super(startX, startY, width, height, hoverString);
+		super(startX, startY, width, height, hoverString, setResizeble);
 		setBgColor(bgColor);
 		setDisplayString(displayString);
 		setDisplayStringColor(displayStringColor);
@@ -123,7 +123,7 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 				try {
 					if (link_type == Link_type.LINK_TO_SAME_VIDEO) {
 						generator.enableOverlay(false);
-						getMediaPlayer().skip(skip_time-getMediaPlayer().getTime());
+						getMediaPlayer().skip(skip_time - getMediaPlayer().getTime());
 						generator.enableOverlay(true);
 					} else if (link_type == Link_type.LINK_TO_OTHER_VIDEO) {
 						CustomMediaPlayerFactory.addMedia(getMd_address());
@@ -157,11 +157,12 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 
 	@Override
 	public void paint(Graphics g) {
-		
-		// System.out.println(this.getClass().getName() + " " + SpotLight.class.getName() + ": paint called ");
+
+		// System.out.println(this.getClass().getName() + " " +
+		// SpotLight.class.getName() + ": paint called ");
 
 		super.paint(g);
-		
+
 		Graphics2D g2 = (Graphics2D) g;
 
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -172,7 +173,6 @@ public class SpotLight extends CustomJComponent implements JCompoWithTextPane {
 		g2.fillRect(0, 0, getWidth(), getHeight());
 		if (getComponentImage() != null)
 			g2.drawImage(getComponentImage(), 0, 0, getWidth() - 1, getHeight() - 1, null);
-
 
 	}
 

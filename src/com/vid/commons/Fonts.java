@@ -1,20 +1,42 @@
-package com.vid.commons;
+ package com.vid.commons;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.util.Hashtable;
 
 public class Fonts {
 
-	public static final Font SAN_SERIF = new Font("Sansserif", Font.BOLD, 18);
+	private static final String[] families = GraphicsEnvironment.getLocalGraphicsEnvironment()
+			.getAvailableFontFamilyNames();
+
+	private static final String[] stylenames = { "Plain", "Italic", "Bold", "Bold Italic" };
+
+	
+	
+	private static Font appFont;
+
+	private static String[] fonts;
+
+	private static String[] fontIndex;
+
+	public Fonts() {
+		fonts = new String[families.length];
+		fontIndex = new String[families.length];
+		int fontId = 0;
+		for (int f = 0; f < families.length; f++) { // for each family
+			fonts[fontId] = families[f];
+			fontIndex[fontId] = "" + fontId;
+			fontId++;
+		}
+	}
 
 	public static Font getFont(String name, int style, int size) {
 		return new Font(name, style, size);
 	}
 
-	private static Font appFont = SAN_SERIF;
-
 	public static Font getAppFont() {
+		if (appFont == null) {
+			appFont = getFont(SANSERIF, Font.BOLD, 18);
+		}
 		return appFont;
 	}
 
@@ -32,6 +54,7 @@ public class Fonts {
 	}
 
 	public static final String SANSERIF = "Sansserif";
+
 	public static final String AGENCY_FB = "Agency FB";
 	public static final String ALGERIAN = "Algerian";
 	public static final String ARIAL = "Arial";
@@ -247,5 +270,17 @@ public class Fonts {
 	public static final String YU_MINCHO_DEMIBOLD = "Yu Mincho Demibold";
 	public static final String YU_MINCHO_LIGHT = "Yu Mincho Light";
 	public static final String YU_MINCHO = "Yu Mincho";
+
+	public static String[] getFonts() {
+		return fonts;
+	}
+
+	public static String[] getFontIndex() {
+		return fontIndex;
+	}
+
+	public static String[] getFamilies() {
+		return families;
+	}
 
 }
